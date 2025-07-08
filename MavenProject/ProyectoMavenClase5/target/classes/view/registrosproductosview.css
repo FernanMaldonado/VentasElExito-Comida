@@ -1,0 +1,68 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+
+}
+
+/* Fondo general */
+.root {
+    -fx-background-color: #f2f2f2;
+}
+
+/* Título grande centrado */
+.titulo {
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 24px;
+    -fx-text-fill: #2c3e50;
+}
+
+/* Tabla */
+.table-view {
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0.5, 0, 2);
+}
+
+.table-column {
+    -fx-alignment: CENTER;
+}
+
+/* Encabezado de la tabla */
+.table-view .column-header-background {
+    -fx-background-color: #3498db;
+}
+
+.table-view .column-header, 
+.table-view .column-header .label {
+    -fx-text-fill: grey;
+    -fx-font-weight: bold;
+}
+
+/* Filas */
+.table-row-cell:filled:selected {
+    -fx-background-color: #d6eaf8;
+}
+
+.table-row-cell:filled:hover {
+    -fx-background-color: #f0f8ff;
+}
+
+.boton {
+    -fx-background-color: #3498db; /* azul medio */
+    -fx-text-fill: white;          /* texto blanco */
+    -fx-font-size: 14px;
+    -fx-padding: 8px 20px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 3, 0.5, 0, 2);
+    -fx-transition: all 0.3s ease;
+}
+
+.boton:hover {
+    -fx-background-color: #2980b9; /* azul más oscuro en hover */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0.7, 0, 3);
+}

@@ -2,11 +2,16 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@inicioview.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.InicioController">
    <children>
-      <Button layoutX="229.0" layoutY="216.0" mnemonicParsing="false" prefHeight="243.0" prefWidth="341.0" styleClass="boton" stylesheets="@inicioview.css" text="Iniciar" />
-      <Text layoutX="182.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="titulo" text="Bienvenido a sistema de Ventas de &quot;Ventas El Exito&quot;" textAlignment="CENTER" wrappingWidth="467.78271484375" />
+      <Text layoutX="165.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="titulo" text="Bienvenido a la gestion de Ventas de &quot;Ventas El Exito&quot;" textAlignment="CENTER" wrappingWidth="498.1826171875" />
+      <Button layoutX="264.0" layoutY="200.0" mnemonicParsing="false" prefHeight="175.0" prefWidth="300.0" styleClass="boton" text="Iniciar">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

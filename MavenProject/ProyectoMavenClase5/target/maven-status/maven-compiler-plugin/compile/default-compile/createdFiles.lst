@@ -1,2 +1,4 @@
 org\fernandomaldonado\controller\InicioController.class
+org\fernandomaldonado\conexion\Conexion.class
+org\fernandomaldonado\controller\RegistrosProductosController.class
 org\fernandomaldonado\system\Main.class
