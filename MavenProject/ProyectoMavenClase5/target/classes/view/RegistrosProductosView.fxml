@@ -9,12 +9,13 @@
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@registrosproductosview.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.RegistrosProductosController">
    <children>
       <Label layoutX="253.0" layoutY="25.0" styleClass="titulo" text="Registro de Productos" />
-      <TableView layoutX="12.0" layoutY="91.0" prefHeight="463.0" prefWidth="774.0">
+      <TableView fx:id="tablaProductos" layoutX="12.0" layoutY="89.0" prefHeight="463.0" prefWidth="774.0">
         <columns>
-          <TableColumn prefWidth="238.4000244140625" text="Nombre" />
-          <TableColumn prefWidth="240.0" text="Marca" />
-            <TableColumn prefWidth="172.0" text="Precio" />
-            <TableColumn prefWidth="124.7999267578125" text="Stock" />
+          <TableColumn fx:id="colIdProducto" prefWidth="52.0" text="ID" />
+          <TableColumn fx:id="colNombreProducto" prefWidth="231.99996948242188" text="Nombre" />
+            <TableColumn fx:id="colMarca" prefWidth="190.4000244140625" text="Marca" />
+            <TableColumn fx:id="colPrecio" prefWidth="172.00006103515625" text="Precio" />
+            <TableColumn fx:id="colStock" prefWidth="128.0" text="Stock" />
         </columns>
       </TableView>
       <Button fx:id="btnRegresar" layoutX="14.0" layoutY="26.0" mnemonicParsing="false" onAction="#clickRP" styleClass="boton" text="Regresar" />
