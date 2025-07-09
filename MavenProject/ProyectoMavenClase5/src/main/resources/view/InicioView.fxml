@@ -8,7 +8,22 @@
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@inicioview.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.InicioController">
    <children>
       <Text layoutX="165.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="titulo" text="Bienvenido a la gestion de Ventas de &quot;Ventas El Exito&quot;" textAlignment="CENTER" wrappingWidth="498.1826171875" />
-      <Button fx:id="btnIniciar" layoutX="264.0" layoutY="225.0" mnemonicParsing="false" onAction="#clickInicio" prefHeight="175.0" prefWidth="300.0" styleClass="boton" text="Iniciar">
+      <Button fx:id="btnIniciar" layoutX="51.0" layoutY="168.0" mnemonicParsing="false" onAction="#clickInicio" prefHeight="146.0" prefWidth="227.0" styleClass="boton" text="Ir a Productos">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnIniciar1" layoutX="496.0" layoutY="168.0" mnemonicParsing="false" onAction="#clickInicio" prefHeight="146.0" prefWidth="227.0" styleClass="boton" text="Ir a Compras">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnIniciar2" layoutX="51.0" layoutY="395.0" mnemonicParsing="false" onAction="#clickInicio" prefHeight="146.0" prefWidth="227.0" styleClass="boton" text="Ir a clientes">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnIniciar3" layoutX="496.0" layoutY="386.0" mnemonicParsing="false" onAction="#clickInicio" prefHeight="146.0" prefWidth="227.0" styleClass="boton" text="XXXXXXXX">
          <font>
             <Font size="20.0" />
          </font>
