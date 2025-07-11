@@ -1,77 +1,77 @@
 package org.fernandomaldonado.controller;
-
+import org.fernandomaldonado.conexion.Conexion;
+import org.fernandomaldonado.model.RegistrosProductos;
 import java.net.URL;
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.fxml.Initializable;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.fernandomaldonado.conexion.Conexion;
+import java.util.ArrayList;
+import java.sql.CallableStatement;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javafx.event.ActionEvent;
 import org.fernandomaldonado.system.Main;
-import org.fernandomaldonado.model.RegistrosProductos; // IMPORTANTE: Importa tu clase de modelo
 
 /**
  * FXML Controller class
  *
- * @author acord
+ * @author informatica
  */
-public class RegistrosProductosController implements Initializable {
+    public class RegistrosProductosController implements Initializable {
+    @FXML private TableView <RegistrosProductos> tablaProductos;
+    @FXML private TableColumn colIdProducto,colNombreProducto,colMarca,colPrecio,colStock;
+    @FXML private TextField txtIdProducto,txtNombreProducto,txtMarca,txtPrecio,txtBuscar,txtStock;
+    @FXML private Button btnAnterior,btnSiguiente, btnNuevo, btnEditar, btnEliminar, 
+            btnCancelar, btnGuardar ,btnRegresar; 
     private Main principal;
-
-    @FXML private Button btnRegresar;
-    // CAMBIO AQUI: La tabla es de tipo RegistrosProductos
-    @FXML private TableView<RegistrosProductos> tablaProductos;
-    // Las TableColumn deben ser del tipo de la clase de modelo y el tipo de dato de la columna
-    @FXML private TableColumn<RegistrosProductos, Integer> colIdProducto;
-    @FXML private TableColumn<RegistrosProductos, String> colNombreProducto;
-    @FXML private TableColumn<RegistrosProductos, String> colMarca;
-    @FXML private TableColumn<RegistrosProductos, Double> colPrecio;
-    @FXML private TableColumn<RegistrosProductos, Integer> colStock;
-    @FXML private TextField txtIdProducto,txtNombreProducto , txtMarca, txtPrecio,txtStock;
+    private ObservableList<RegistrosProductos> listaProductos;
     private RegistrosProductos modeloProductos ;
     private enum acciones{Agregar,Eliminar,Editar,Ninguna};
     acciones tipoDeAccion = acciones.Ninguna;
     public void setPrincipal(Main principal) {
         this.principal = principal;
     }
-
-    // CAMBIO AQUI: La lista observable es de tipo RegistrosProductos
-    private ObservableList<RegistrosProductos> listaProductos;
+ 
+    public Main getPrincipal() {
+        return principal;
+    }
 
     @Override
+
     public void initialize(URL url, ResourceBundle rb) {
+        // Inicializar de primero lo que haya aqui
         configurarColumnas();
-        cargarTablaProductos();
+        cargarTablaCitas();
+        // expresion lambda
+        tablaProductos.setOnMouseClicked(eh -> cargarCitasTextField());
+    }    
+
+    public void configurarColumnas(){
+        //Formato de columnas
+        colIdProducto.setCellValueFactory(new PropertyValueFactory<RegistrosProductos,Integer>("idProducto"));
+        colNombreProducto.setCellValueFactory(new PropertyValueFactory<RegistrosProductos,String>("nombreProducto"));
+        colMarca.setCellValueFactory(new PropertyValueFactory<RegistrosProductos, String>("marca"));
+        colPrecio.setCellValueFactory(new PropertyValueFactory<RegistrosProductos, Integer>("precio"));
+        colStock.setCellValueFactory(new PropertyValueFactory<RegistrosProductos, Integer>("stock"));
+
     }
 
-    public void configurarColumnas() {
-        // Los nombres de las propiedades deben coincidir con los métodos property() en la clase RegistrosProductos
-        colIdProducto.setCellValueFactory(new PropertyValueFactory<>("idProducto"));
-        colNombreProducto.setCellValueFactory(new PropertyValueFactory<>("nombreProducto"));
-        colMarca.setCellValueFactory(new PropertyValueFactory<>("marca"));
-        colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
-        colStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
-    }
-
-    public void cargarTablaProductos() {
+    public void cargarTablaCitas(){
         listaProductos = FXCollections.observableArrayList(listarProductos());
         tablaProductos.setItems(listaProductos);
-        if (!listaProductos.isEmpty()) { // Asegúrate de que haya elementos antes de seleccionar
-            tablaProductos.getSelectionModel().selectFirst();
-        }
+        tablaProductos.getSelectionModel().selectFirst();
+        cargarCitasTextField();
     }
     
-    public void cargarProductosTextField (){
+    public void cargarCitasTextField (){
         // tabla clientes -> modelo = propidades de TEXTFIELD
         RegistrosProductos citaSeleccionada = tablaProductos.getSelectionModel().getSelectedItem();
         if(citaSeleccionada != null ){
@@ -81,45 +81,209 @@ public class RegistrosProductosController implements Initializable {
         txtPrecio.setText(String.valueOf(citaSeleccionada.getPrecio()));
         txtStock.setText(String.valueOf(citaSeleccionada.getStock()));
         }
+        
     }
-
-    // CAMBIO AQUI: Ahora el ArrayList es de tipo RegistrosProductos
-    public ArrayList<RegistrosProductos> listarProductos() {
-        ArrayList<RegistrosProductos> rproductos = new ArrayList<>();
+    
+    public ArrayList<RegistrosProductos> listarProductos(){
+        ArrayList<RegistrosProductos> productos = new ArrayList<>();
         try {
-            CallableStatement cs = Conexion.getInstancia().getConexion()
-                    .prepareCall("call sp_listarProductos();");
-            ResultSet resultado = cs.executeQuery();
-
+            ResultSet resultado = Conexion.getInstancia().getConexion()
+                    .prepareCall("call sp_listarProductos();").executeQuery();
             while (resultado.next()) {
-                // CAMBIO AQUI: Creas una nueva instancia de RegistrosProductos (tu modelo)
-                rproductos.add(new RegistrosProductos(
-                        resultado.getInt("idProducto"),
-                        resultado.getString("nombreProducto"),
-                        resultado.getString("marca"),
-                        resultado.getDouble("precio"),
-                        resultado.getInt("stock")
-                ));
+                productos.add ( new RegistrosProductos(
+                        resultado.getInt(1),
+                        resultado.getString(2),
+                        resultado.getString(3),
+                        resultado.getDouble(4),
+                        resultado.getInt(5)));
             }
-        } catch (SQLException e) {
-            System.out.println("Error al listar productos: " + e.getMessage());
+        } catch (SQLException ex) {
+            System.out.println("Error " + ex.getSQLState());   
+            ex.printStackTrace();
+        }
+        return productos;
+    }
+    
+    public RegistrosProductos obtenerModeloProductos(){
+        int codigoProducto ;
+        if (txtIdProducto.getText().isEmpty()) {
+          codigoProducto = 1 ;  
+        }else {
+            codigoProducto = Integer.parseInt(txtIdProducto.getText());
+        }
+        String nombreProducto = txtNombreProducto.getText();
+        String marca = txtMarca.getText();
+        Double precio = Double.parseDouble(txtPrecio.getText());
+        int stock = Integer.parseInt(txtStock.getText());
+        RegistrosProductos producto = new RegistrosProductos(codigoProducto, nombreProducto, marca, precio, stock);
+        return producto ;
+    }
+    
+    public void AgregarProductos(){
+        modeloProductos = obtenerModeloProductos();
+        try {
+            CallableStatement enunciado = Conexion.getInstancia().
+                    getConexion().prepareCall("call sp_AgregarProductos(?,?,?,?);");
+            enunciado.setString(1,modeloProductos.getNombreProducto());
+            enunciado.setString(2,modeloProductos.getMarca());
+            enunciado.setDouble(3,modeloProductos.getPrecio());
+            enunciado.setInt(4,modeloProductos.getStock());
+            enunciado.execute();
+            cargarTablaCitas();
+        } catch (SQLException ex) {
+            System.out.println("Error al agregar");
+            ex.printStackTrace();
+        }
+    }
+    
+    public void actualizarCitas(){
+        modeloProductos = obtenerModeloProductos ();
+        try{
+            CallableStatement enunciado = Conexion.getInstancia().getConexion().
+                    prepareCall("call sp_editarProductos(?,?,?,?,?);");
+            enunciado.setInt(1,modeloProductos.getIdProducto());
+            enunciado.setString(2,modeloProductos.getNombreProducto());
+            enunciado.setString(3,modeloProductos.getMarca());
+            enunciado.setDouble(4,modeloProductos.getPrecio());
+            enunciado.setInt(5,modeloProductos.getStock());
+            enunciado.execute();
+            cargarTablaCitas();    
+        }catch(SQLException e){
+            System.out.println("Error al editar");
             e.printStackTrace();
-        } finally {
-            // Considera cerrar el CallableStatement y ResultSet aquí.
-            // La conexión debería ser gestionada en la clase Conexion.
         }
-        return rproductos;
     }
+    
+    public void eliminarMascotas(){
+        modeloProductos = obtenerModeloProductos();
+        try{
+            CallableStatement enunciado = Conexion.getInstancia().getConexion().
+                    prepareCall("call sp_eliminarProductos(?);");
+            enunciado.setInt(1,modeloProductos.getIdProducto());
+            enunciado.execute();
+            cargarTablaCitas();
+        }catch(SQLException ex){
+            System.out.println("Error al eliminar");
+            ex.printStackTrace();
+        }
+    }
+    
+    public void limpiarTexTField () {
+        txtIdProducto.clear();
+        txtNombreProducto.clear();
+        txtMarca.clear();
+        txtPrecio.clear();
+        txtStock.clear();
+}
 
+    
+    public void cambiarEstado (boolean estado){
+        txtNombreProducto.setDisable(estado);
+        txtMarca.setDisable(estado);
+        txtPrecio.setDisable(estado);
+        txtStock.setDisable(estado);
+        
+    }
+    
+    public void habilitarDeshabilitarNodo (){
+        boolean desactivado = txtNombreProducto.isDisable();
+        cambiarEstado(!desactivado);
+        btnSiguiente.setDisable(desactivado);
+        btnAnterior.setDisable(desactivado);
+        btnNuevo.setDisable(desactivado);
+        btnEditar.setDisable(desactivado);
+        btnEliminar.setDisable(desactivado);
+        btnGuardar.setDisable(!desactivado);
+        btnCancelar.setDisable(!desactivado);
+      
+    }
+    
+    // Botones 
     @FXML
-    public void clickRP(ActionEvent evento) {
-        if (evento.getSource() == btnRegresar) {
-            System.out.println("Regresando...");
-            if (principal != null) {
-                principal.Inicio();
-            } else {
-                System.err.println("Error: La referencia a Main es nula en RegistrosProductosController.");
+    private void btnNuevoAction(){
+        limpiarTexTField();
+        txtNombreProducto.requestFocus();
+        tipoDeAccion = acciones.Agregar;
+        habilitarDeshabilitarNodo();
+    }
+    
+    @FXML 
+    private void btnEditarAction (){
+        tipoDeAccion = acciones.Editar;
+            habilitarDeshabilitarNodo();
+    }
+    
+    @FXML 
+    private void btnEliminarAction (){
+        eliminarMascotas();
+        tipoDeAccion = acciones.Eliminar;
+    }
+    
+    @FXML
+    private void btnCancelarAction (){
+        cargarCitasTextField();
+            habilitarDeshabilitarNodo();
+    }
+    @FXML
+    private void btnAnteriorAction (){
+        int indice = tablaProductos.getSelectionModel().getSelectedIndex();
+        if (indice > 0 ) {
+            tablaProductos.getSelectionModel().select(indice - 1);
+            cargarCitasTextField();
+        }
+    }
+    @FXML
+    private void btnSiguienteAction (){
+        int indice = tablaProductos.getSelectionModel().getSelectedIndex();
+        if (indice < listaProductos.size()-1 ) {
+            tablaProductos.getSelectionModel().select(indice + 1);
+            cargarCitasTextField();
+        }
+    }
+    
+    @FXML 
+    private void btnGuardarAction (){
+        if (tipoDeAccion == acciones.Agregar) {
+            AgregarProductos();
+            tipoDeAccion = acciones.Ninguna;
+        }else if (tipoDeAccion == acciones.Editar){
+            actualizarCitas();
+            tipoDeAccion = acciones.Ninguna;
+        }
+            habilitarDeshabilitarNodo();
+    }
+    
+    @FXML
+        private void buscarCita() {
+            ArrayList<RegistrosProductos> resultadoBusqueda = new ArrayList<>();
+            String textoBusqueda = txtBuscar.getText();
+
+            try {
+                int idBuscado = Integer.parseInt(textoBusqueda);
+                for (RegistrosProductos producto : listaProductos) {
+                    if (producto.getIdProducto()== idBuscado) {
+                        resultadoBusqueda.add(producto);
+                        break; // Si los ID son únicos, puedes salir del bucle
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Puedes mostrar una alerta o simplemente no hacer nada
+                System.out.println("ID inválido: debe ser un número");
+            }
+
+            tablaProductos.setItems(FXCollections.observableArrayList(resultadoBusqueda));
+            if (!resultadoBusqueda.isEmpty()) {
+                tablaProductos.getSelectionModel().selectFirst();
             }
         }
-    }
+
+     
+    @FXML
+        private void Regresar(ActionEvent evento){
+        if (evento.getSource()== btnRegresar){
+            principal.Inicio();
+            }    
+        }
 }
+
+ 

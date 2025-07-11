@@ -1,3 +1,4 @@
+org\fernandomaldonado\controller\RegistrosProductosController$acciones.class
 org\fernandomaldonado\controller\InicioController.class
 org\fernandomaldonado\conexion\Conexion.class
 org\fernandomaldonado\model\RegistrosProductos.class
