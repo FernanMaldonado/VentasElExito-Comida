@@ -1,40 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="org.fernandomaldonado.controller.InicioController">
-    <stylesheets>
-        <URL value="@inicioview.css" />
-    </stylesheets>
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@inicioview.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.InicioController">
    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="133.0" layoutY="49.0" prefHeight="35.0" prefWidth="353.0" text="Bienvenido a sistema de Ventas">
+      <Text layoutX="165.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="titulo" text="Bienvenido a la gestion de Ventas de &quot;Ventas El Exito&quot;" textAlignment="CENTER" wrappingWidth="498.1826171875" />
+      <Button fx:id="btnIniciar" layoutX="51.0" layoutY="168.0" mnemonicParsing="false" onAction="#clickInicio" prefHeight="146.0" prefWidth="227.0" styleClass="boton" text="Ir a Productos">
          <font>
-            <Font size="24.0" />
+            <Font size="20.0" />
          </font>
-         <textFill>
-            <RadialGradient centerX="0.5276243093922652" centerY="0.46208530805687204" radius="1.0">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </color>
-                  </Stop>
-               </stops>
-            </RadialGradient>
-         </textFill>
-      </Label>
-      <Button layoutX="219.0" layoutY="122.0" mnemonicParsing="false" prefHeight="128.0" prefWidth="164.0" text="Button" />
+      </Button>
+      <Button fx:id="btnIniciar1" layoutX="496.0" layoutY="168.0" mnemonicParsing="false" onAction="#clickInicio" prefHeight="146.0" prefWidth="227.0" styleClass="boton" text="Ir a Compras">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnIniciar2" layoutX="51.0" layoutY="395.0" mnemonicParsing="false" onAction="#clickInicio" prefHeight="146.0" prefWidth="227.0" styleClass="boton" text="Ir a clientes">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnIniciar3" layoutX="496.0" layoutY="386.0" mnemonicParsing="false" onAction="#clickInicio" prefHeight="146.0" prefWidth="227.0" styleClass="boton" text="XXXXXXXX">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
