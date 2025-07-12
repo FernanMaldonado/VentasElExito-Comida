@@ -15,7 +15,7 @@
 /* Título grande centrado */
 .titulo {
     -fx-font-family: "Arial Black";
-    -fx-font-size: 24px;
+    -fx-font-size: 40px;
     -fx-text-fill: #2c3e50;
 }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -8,56 +9,93 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@registrosproductosview.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.RegistrosProductosController">
-   <children>
-      <Label layoutX="470.0" layoutY="26.0" styleClass="titulo" text="Registro de Productos" />
-      <TableView fx:id="tablaProductos" layoutX="12.0" layoutY="89.0" prefHeight="280.0" prefWidth="774.0">
-        <columns>
-          <TableColumn fx:id="colIdProducto" prefWidth="52.0" text="ID" />
-          <TableColumn fx:id="colNombreProducto" prefWidth="231.99996948242188" text="Nombre" />
-            <TableColumn fx:id="colMarca" prefWidth="190.4000244140625" text="Marca" />
-            <TableColumn fx:id="colPrecio" prefWidth="172.00006103515625" text="Precio" />
-            <TableColumn fx:id="colStock" prefWidth="128.0" text="Stock" />
-        </columns>
-      </TableView>
-      <Button fx:id="btnRegresar" layoutX="14.0" layoutY="26.0" mnemonicParsing="false" onAction="#Regresar" styleClass="boton" text="Regresar" />
-      <Button fx:id="btnAnterior" layoutX="12.0" layoutY="383.0" mnemonicParsing="false" onAction="#btnAnteriorAction" styleClass="boton" text="&lt;--" />
-      <Button fx:id="btnSiguiente" layoutX="86.0" layoutY="383.0" mnemonicParsing="false" onAction="#btnSiguienteAction" styleClass="boton" text="--&gt;" />
-      <Button fx:id="btnEliminar" layoutX="586.0" layoutY="383.0" mnemonicParsing="false" onAction="#btnEliminarAction" styleClass="boton" text="Eliminar" />
-      <Button fx:id="btnEditar" layoutX="690.0" layoutY="383.0" mnemonicParsing="false" onAction="#btnEditarAction" styleClass="boton" text="Actualizar" />
-      <Button fx:id="btnNuevo" layoutX="486.0" layoutY="383.0" mnemonicParsing="false" onAction="#btnNuevoAction" styleClass="boton" text="Agregar" />
-      <GridPane layoutX="90.0" layoutY="439.0" prefHeight="127.0" prefWidth="618.0">
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.20001220703125" minWidth="10.0" prefWidth="89.2" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="206.4000244140625" minWidth="10.0" prefWidth="151.79998779296875" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="206.4000244140625" minWidth="10.0" prefWidth="59.800012207031244" />
-          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="183.0" minWidth="10.0" prefWidth="155.99998779296874" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="163.40002441406244" minWidth="10.0" prefWidth="136.2000122070312" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <TextField fx:id="txtIdProducto" prefHeight="26.0" prefWidth="51.0" GridPane.columnIndex="1" />
-            <TextField fx:id="txtNombreProducto" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="txtMarca" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="txtPrecio" prefHeight="26.0" prefWidth="51.0" GridPane.columnIndex="4" />
-            <TextField fx:id="txtStock" prefHeight="26.0" prefWidth="51.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-            <Label text="ID" />
-            <Label text="Nombre" GridPane.rowIndex="1" />
-            <Label text="Marca" GridPane.rowIndex="2" />
-            <Label text="Precio" GridPane.columnIndex="3" />
-            <Label text="Stock" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <Button fx:id="btnGuardar" mnemonicParsing="false" onAction="#btnGuardarAction" styleClass="boton" text="Guardar" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-            <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#btnCancelarAction" styleClass="boton" text="Cancelar" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-         </children>
-      </GridPane>
-      <TextField fx:id="txtBuscar" layoutX="131.0" layoutY="32.0" />
-      <Button fx:id="btnBuscar" layoutX="301.0" layoutY="32.0" mnemonicParsing="false" text="Button" />
-   </children>
+<AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@registrosproductosview.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.RegistrosProductosController">
+
+    <children>
+
+        <!-- Contenedor principal centrado -->
+        <VBox alignment="TOP_CENTER" spacing="20" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
+            
+            <!-- Título -->
+            <Label fx:id="labelTitulo" styleClass="titulo" text="Registro de Productos">
+                <font><Font size="20.0" /></font>
+            </Label>
+
+            <!-- Búsqueda -->
+            <HBox alignment="CENTER" spacing="10">
+                <ComboBox fx:id="cmbFiltroBusqueda" prefHeight="25.0" prefWidth="198.0" promptText="Buscar por :" />
+                <TextField fx:id="txtBuscar" prefWidth="215.0" />
+                <Button fx:id="btnBuscar" onAction="#BuscarID" text="Buscar" />
+            </HBox>
+
+            <!-- Tabla -->
+            <TableView fx:id="tablaProductos" prefHeight="250.0">
+                <columns>
+                    <TableColumn fx:id="colIdProducto" prefWidth="52.0" text="ID" />
+                    <TableColumn fx:id="colNombreProducto" prefWidth="231.0" text="Nombre" />
+                    <TableColumn fx:id="colMarca" prefWidth="190.0" text="Marca" />
+                    <TableColumn fx:id="colPrecio" prefWidth="172.0" text="Precio" />
+                    <TableColumn fx:id="colStock" prefWidth="128.0" text="Stock" />
+                </columns>
+            </TableView>
+
+            <!-- Botones de navegación -->
+            <HBox alignment="CENTER" spacing="15">
+                <Button fx:id="btnAnterior" mnemonicParsing="false" onAction="#btnAnteriorAction" styleClass="boton" text="&lt;--" />
+                <Region HBox.hgrow="ALWAYS" />
+                
+                <Button fx:id="btnNuevo" mnemonicParsing="false" onAction="#btnNuevoAction" styleClass="boton" text="Agregar" />
+                <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#btnEliminarAction" styleClass="boton" text="Eliminar" />
+                <Button fx:id="btnEditar" mnemonicParsing="false" onAction="#btnEditarAction" styleClass="boton" text="Actualizar" />
+                
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="btnSiguiente" mnemonicParsing="false" onAction="#btnSiguienteAction" styleClass="boton" text="--&gt;" />
+            </HBox>
+            
+            <!-- Datos del producto -->
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" />
+                    <ColumnConstraints hgrow="ALWAYS" />
+                    <ColumnConstraints halignment="RIGHT" />
+                    <ColumnConstraints hgrow="ALWAYS" />
+                </columnConstraints>
+
+                <rowConstraints>
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                </rowConstraints>
+
+                <Label text="ID" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="txtIdProducto" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <Label text="Nombre" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField fx:id="txtNombreProducto" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Label text="Marca" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField fx:id="txtMarca" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <Label text="Precio" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <TextField fx:id="txtPrecio" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+                <Label text="Stock" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <TextField fx:id="txtStock" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+                <Button fx:id="btnGuardar" disable="true" onAction="#btnGuardarAction" styleClass="boton" text="Guardar" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                <Button fx:id="btnCancelar" disable="true" onAction="#btnCancelarAction" styleClass="boton" text="Cancelar" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            </GridPane>
+        </VBox>
+
+        <!-- Botón regresar fijo arriba izquierda -->
+        <Button fx:id="btnRegresar" layoutX="30.0" layoutY="10.0" mnemonicParsing="false" onAction="#Regresar" styleClass="boton" text="Regresar" />
+
+    </children>
 </AnchorPane>

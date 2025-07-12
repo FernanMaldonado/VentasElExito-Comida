@@ -9,6 +9,7 @@ import org.fernandomaldonado.controller.InicioController;
 import org.fernandomaldonado.controller.RegistrosProductosController;
 
 import java.io.IOException;
+import org.fernandomaldonado.controller.LoginController;
 
 public class Main extends Application {
     // CAMBIO AQUI: La ruta debe ser solo "/view/" porque tus FXML están directamente en src/main/resources/view/
@@ -66,7 +67,16 @@ public class Main extends Application {
     }
 
     public void RegistrosProductos() {
-        RegistrosProductosController rp = cambiarEntreEscenas("RegistrosProductosView.fxml", 800, 600);
+        RegistrosProductosController rp = cambiarEntreEscenas("RegistrosProductosView.fxml", 838, 700);
+        if (rp != null) {
+            rp.setPrincipal(this);
+        } else {
+            System.err.println("No se pudo cargar la vista de Registros de Productos o su controlador es nulo.");
+        }
+    }
+    
+    public void Login() {
+        LoginController rp = cambiarEntreEscenas("LoginView.fxml", 600, 400);
         if (rp != null) {
             rp.setPrincipal(this);
         } else {

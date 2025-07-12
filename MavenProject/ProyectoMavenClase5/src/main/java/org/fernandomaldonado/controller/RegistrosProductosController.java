@@ -18,7 +18,9 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.event.ActionEvent;
+import javafx.scene.control.ComboBox;
 import org.fernandomaldonado.system.Main;
+import javafx.collections.FXCollections;
 
 /**
  * FXML Controller class
@@ -31,6 +33,9 @@ import org.fernandomaldonado.system.Main;
     @FXML private TextField txtIdProducto,txtNombreProducto,txtMarca,txtPrecio,txtBuscar,txtStock;
     @FXML private Button btnAnterior,btnSiguiente, btnNuevo, btnEditar, btnEliminar, 
             btnCancelar, btnGuardar ,btnRegresar; 
+    @FXML
+    private ComboBox<String> cmbFiltroBusqueda;
+
     private Main principal;
     private ObservableList<RegistrosProductos> listaProductos;
     private RegistrosProductos modeloProductos ;
@@ -52,6 +57,8 @@ import org.fernandomaldonado.system.Main;
         cargarTablaCitas();
         // expresion lambda
         tablaProductos.setOnMouseClicked(eh -> cargarCitasTextField());
+        cmbFiltroBusqueda.getItems().addAll(" Buscar Por :","ID", "Nombre", "Marca", "Precio", "Stock");
+        cmbFiltroBusqueda.getSelectionModel().selectFirst(); // selecciona el primero por defecto
     }    
 
     public void configurarColumnas(){
@@ -254,30 +261,76 @@ import org.fernandomaldonado.system.Main;
     }
     
     @FXML
-        private void buscarCita() {
+        private void BuscarID() {
             ArrayList<RegistrosProductos> resultadoBusqueda = new ArrayList<>();
-            String textoBusqueda = txtBuscar.getText();
+            String textoBusqueda = txtBuscar.getText().trim();
+            String filtro = cmbFiltroBusqueda.getValue();
 
-            try {
-                int idBuscado = Integer.parseInt(textoBusqueda);
-                for (RegistrosProductos producto : listaProductos) {
-                    if (producto.getIdProducto()== idBuscado) {
-                        resultadoBusqueda.add(producto);
-                        break; // Si los ID son únicos, puedes salir del bucle
-                    }
-                }
-            } catch (NumberFormatException e) {
-                // Puedes mostrar una alerta o simplemente no hacer nada
-                System.out.println("ID inválido: debe ser un número");
+            if (textoBusqueda.isEmpty() || filtro == null) {
+                tablaProductos.setItems(FXCollections.observableArrayList(listaProductos));
+                return;
             }
 
-            tablaProductos.setItems(FXCollections.observableArrayList(resultadoBusqueda));
-            if (!resultadoBusqueda.isEmpty()) {
+            for (RegistrosProductos producto : listaProductos) {
+                switch (filtro) {
+                    case "ID":
+                        try {
+                            int idBuscado = Integer.parseInt(textoBusqueda);
+                            if (producto.getIdProducto() == idBuscado) {
+                                resultadoBusqueda.add(producto);
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("ID inválido");
+                        }
+                        break;
+
+                    case "Nombre":
+                        if (producto.getNombreProducto().toLowerCase().contains(textoBusqueda.toLowerCase())) {
+                            resultadoBusqueda.add(producto);
+                        }
+                        break;
+
+                    case "Marca":
+                        if (producto.getMarca().toLowerCase().contains(textoBusqueda.toLowerCase())) {
+                            resultadoBusqueda.add(producto);
+                        }
+                        break;
+
+                    case "Precio":
+                        try {
+                            double precio = Double.parseDouble(textoBusqueda);
+                            if (producto.getPrecio() == precio) {
+                                resultadoBusqueda.add(producto);
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Precio inválido");
+                        }
+                        break;
+
+                    case "Stock":
+                        try {
+                            int stock = Integer.parseInt(textoBusqueda);
+                            if (producto.getStock() == stock) {
+                                resultadoBusqueda.add(producto);
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Stock inválido");
+                        }
+                        break;
+                }
+            }
+
+            if (resultadoBusqueda.isEmpty()) {
+                tablaProductos.setItems(FXCollections.observableArrayList(listaProductos));
+            } else {
+                tablaProductos.setItems(FXCollections.observableArrayList(resultadoBusqueda));
                 tablaProductos.getSelectionModel().selectFirst();
             }
         }
 
-     
+
+
+    
     @FXML
         private void Regresar(ActionEvent evento){
         if (evento.getSource()== btnRegresar){

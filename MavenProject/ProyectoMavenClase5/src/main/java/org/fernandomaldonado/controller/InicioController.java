@@ -37,7 +37,7 @@ public class InicioController implements Initializable {
     public void clickInicio(ActionEvent evento) {
         if (evento.getSource() == btnIniciar) {
             System.out.println("Iniciando...");
-            principal.RegistrosProductos();
+            principal.Login();
         }
     }
     
