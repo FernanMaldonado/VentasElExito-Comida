@@ -10,6 +10,9 @@ import org.fernandomaldonado.controller.RegistrosProductosController;
 
 import java.io.IOException;
 import org.fernandomaldonado.controller.LoginController;
+import org.fernandomaldonado.controller.PantallaInicioController;
+import org.fernandomaldonado.controller.RegistrarUsuarioController;
+import org.fernandomaldonado.controller.RegistrarceController;
 
 public class Main extends Application {
     // CAMBIO AQUI: La ruta debe ser solo "/view/" porque tus FXML están directamente en src/main/resources/view/
@@ -24,7 +27,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         this.escenarioPrincipal = stage;
         this.escenarioPrincipal.setTitle("Ventas El Éxito - Comida");
-        Inicio();
+        PantallaInicio();
         stage.show();
     }
 
@@ -77,6 +80,34 @@ public class Main extends Application {
     
     public void Login() {
         LoginController rp = cambiarEntreEscenas("LoginView.fxml", 600, 400);
+        if (rp != null) {
+            rp.setPrincipal(this);
+        } else {
+            System.err.println("No se pudo cargar la vista de Registros de Productos o su controlador es nulo.");
+        }
+    }
+    
+    public void PantallaInicio() {
+        PantallaInicioController rp = cambiarEntreEscenas("PantallaInicioView.fxml", 1000, 600);
+        if (rp != null) {
+            rp.setPrincipal(this);
+        } else {
+            System.err.println("No se pudo cargar la vista de Registros de Productos o su controlador es nulo.");
+        }
+    }
+    
+    public void Registro() {
+        RegistrarceController rp = cambiarEntreEscenas("RegistrarceView.fxml", 800, 700);
+        if (rp != null) {
+            rp.setPrincipal(this);
+        } else {
+            System.err.println("No se pudo cargar la vista de Registros de Productos o su controlador es nulo.");
+        }
+    
+    }
+    
+    public void CrearRegistro() {
+        RegistrarUsuarioController rp = cambiarEntreEscenas("RegistrarUsuarioView.fxml", 800, 700);
         if (rp != null) {
             rp.setPrincipal(this);
         } else {

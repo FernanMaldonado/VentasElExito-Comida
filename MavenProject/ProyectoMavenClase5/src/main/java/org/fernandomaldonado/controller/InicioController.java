@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package org.fernandomaldonado.controller;
 
 import java.net.URL;
@@ -37,7 +33,7 @@ public class InicioController implements Initializable {
     public void clickInicio(ActionEvent evento) {
         if (evento.getSource() == btnIniciar) {
             System.out.println("Iniciando...");
-            principal.Login();
+            principal.RegistrosProductos();
         }
     }
     

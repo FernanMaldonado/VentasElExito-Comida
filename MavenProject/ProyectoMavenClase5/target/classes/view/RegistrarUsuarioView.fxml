@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.fernandomaldonado.controller.RegistrarUsuarioController"
+            prefWidth="500" prefHeight="400">
+    
+    <VBox alignment="CENTER" spacing="10" layoutX="50" layoutY="20" prefWidth="400">
+        
+        <Label text="Formulario de Registro" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+        <TextField fx:id="txtUsername" promptText="Nombre de usuario" />
+        <TextField fx:id="txtNombreCompleto" promptText="Nombre completo" />
+        <TextField fx:id="txtCorreoElectronico" promptText="Correo electrónico" />
+        <PasswordField fx:id="txtContrasena" promptText="Contraseña" />
+        <TextField fx:id="txtNumeroTelefono" promptText="Número de teléfono" />
+        <DatePicker fx:id="txtFechaNacimiento" promptText="Fecha de nacimiento" />
+
+        <HBox spacing="20" alignment="CENTER">
+            <Button fx:id="btnRegistrar" text="Registrar" onAction="#btnRegistrarAction" />
+            <Button fx:id="btnRegresar" text="Regresar" onAction="#btnRegresarAction" />
+        </HBox>
+    </VBox>
+
+</AnchorPane>

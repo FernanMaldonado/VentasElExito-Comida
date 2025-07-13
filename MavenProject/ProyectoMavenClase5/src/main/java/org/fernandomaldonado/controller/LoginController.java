@@ -43,7 +43,7 @@ import org.fernandomaldonado.system.Main;
 
             if (rs.next()) {
                 lblMensaje.setText("¡Login exitoso!");
-                principal.RegistrosProductos();
+                principal.Inicio();
                 // Aquí abres la ventana principal o haces otra acción
             } else {
                 lblMensaje.setText("Usuario o contraseña incorrectos");
@@ -57,7 +57,7 @@ import org.fernandomaldonado.system.Main;
     @FXML
         private void Regresar(ActionEvent evento){
         if (evento.getSource()== btnRegresar){
-            principal.Inicio();
+            principal.PantallaInicio();
             }    
         }
         

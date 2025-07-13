@@ -1,7 +1,12 @@
-org\fernandomaldonado\controller\RegistrosProductosController$acciones.class
 org\fernandomaldonado\controller\InicioController.class
-org\fernandomaldonado\conexion\Conexion.class
+org\fernandomaldonado\controller\RegistrarceController$Accion.class
+org\fernandomaldonado\controller\RegistrarceController.class
 org\fernandomaldonado\model\RegistrosProductos.class
 org\fernandomaldonado\controller\RegistrosProductosController.class
-org\fernandomaldonado\controller\LoginController.class
+org\fernandomaldonado\controller\RegistrarUsuarioController.class
 org\fernandomaldonado\system\Main.class
+org\fernandomaldonado\controller\RegistrosProductosController$acciones.class
+org\fernandomaldonado\controller\PantallaInicioController.class
+org\fernandomaldonado\conexion\Conexion.class
+org\fernandomaldonado\model\Registro.class
+org\fernandomaldonado\controller\LoginController.class

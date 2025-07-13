@@ -329,8 +329,6 @@ import javafx.collections.FXCollections;
         }
 
 
-
-    
     @FXML
         private void Regresar(ActionEvent evento){
         if (evento.getSource()== btnRegresar){

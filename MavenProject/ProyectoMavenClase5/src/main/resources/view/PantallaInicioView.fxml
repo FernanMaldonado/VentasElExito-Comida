@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="1000.0" styleClass="Fondo" stylesheets="@pantallainicioview.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.PantallaInicioController">
+
+    <!-- Encabezado que se adapta al ancho -->
+    
+    <StackPane layoutY="23.0" prefHeight="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+    <Label text="Bienvenido Portal de Ventas El Exito Comida">
+        <font>
+            <Font size="24.0" />
+        </font>
+    </Label>
+    </StackPane>
+    <StackPane layoutY="71.0" prefHeight="9.0" prefWidth="600.0" styleClass="BARRA" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <Rectangle fx:id="headerRectangle" arcHeight="5.0" arcWidth="5.0" fill="#0084ff" height="10.0" stroke="BLACK" strokeType="INSIDE" />
+    </StackPane>
+    <StackPane fx:id="marqueePane" layoutY="85.0" prefHeight="50.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+    <Label fx:id="lblMarquee" text="🚂 Bienvenido al Portal de Ventas El Éxito Comida 🚂" styleClass="tituloMarquee" />
+    </StackPane>
+
+
+    <Button fx:id="btnRegistrarse" layoutX="379.0" layoutY="27.0" mnemonicParsing="false" onAction="#IniciarPrograma" prefHeight="27.0" prefWidth="86.0" styleClass="InicioButton" text="Registrarse" AnchorPane.rightAnchor="135.0" />
+
+    <Button fx:id="btnIniciarSesion" layoutX="487.0" layoutY="27.0" mnemonicParsing="false" onAction="#IniciarPrograma" prefHeight="25.0" prefWidth="94.0" styleClass="InicioButton" text="Mi Perfil 👤" AnchorPane.rightAnchor="25.0">
+        <font>
+            <Font size="13.0" />
+        </font>
+    </Button>
+   <ImageView fitHeight="60.0" fitWidth="200.0" layoutX="20.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="50.0">
+      <image>
+         <Image url="@../img/descarga.png" />
+      </image>
+   </ImageView>
+    <StackPane layoutY="83.0" prefHeight="460.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+       <ImageView fitHeight="460.0" fitWidth="1000.0" preserveRatio="true" pickOnBounds="true">
+           <image>
+               <Image url="@../img/Banner%20Web_1200x388_PIE_FAMILIAR.png_e459d93b-3287-4a77-8dc7-db67c274b8f0.png" />
+           </image>
+       </ImageView>
+   </StackPane>
+
+
+</AnchorPane>

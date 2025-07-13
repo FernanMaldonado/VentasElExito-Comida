@@ -1,0 +1,33 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+
+}
+
+.BARRA {
+    -fx-background-color :#593622;
+}
+
+.InicioButton {
+    -fx-background-color: #F2B988;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+    -fx-cursor: hand;
+}
+
+.titulo {
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+}
+
+.Fondo   {
+    -fx-background-color :#ffffff;
+}
+
+.tituloMarquee {
+    -fx-font-size: 24px;
+    -fx-text-fill: #004080;
+}
