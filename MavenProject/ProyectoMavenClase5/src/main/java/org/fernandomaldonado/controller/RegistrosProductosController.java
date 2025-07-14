@@ -1,340 +1,313 @@
 package org.fernandomaldonado.controller;
-import org.fernandomaldonado.conexion.Conexion;
-import org.fernandomaldonado.model.RegistrosProductos;
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.fxml.Initializable;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextField;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.cell.PropertyValueFactory;
-import java.util.ArrayList;
-import java.sql.CallableStatement;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import javafx.event.ActionEvent;
-import javafx.scene.control.ComboBox;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import org.fernandomaldonado.conexion.Conexion;
+import org.fernandomaldonado.model.RegistrosProductos;
 import org.fernandomaldonado.system.Main;
-import javafx.collections.FXCollections;
 
-/**
- * FXML Controller class
- *
- * @author informatica
- */
-    public class RegistrosProductosController implements Initializable {
-    @FXML private TableView <RegistrosProductos> tablaProductos;
-    @FXML private TableColumn colIdProducto,colNombreProducto,colMarca,colPrecio,colStock;
-    @FXML private TextField txtIdProducto,txtNombreProducto,txtMarca,txtPrecio,txtBuscar,txtStock;
-    @FXML private Button btnAnterior,btnSiguiente, btnNuevo, btnEditar, btnEliminar, 
-            btnCancelar, btnGuardar ,btnRegresar; 
-    @FXML
-    private ComboBox<String> cmbFiltroBusqueda;
+import java.net.URL;
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
-    private Main principal;
+public class RegistrosProductosController implements Initializable {
+
+    @FXML private TableView<RegistrosProductos> tablaProductos;
+    @FXML private TableColumn<RegistrosProductos, Integer> colIdProducto;
+    @FXML private TableColumn<RegistrosProductos, String> colNombreProducto;
+    @FXML private TableColumn<RegistrosProductos, String> colMarca;
+    @FXML private TableColumn<RegistrosProductos, Double> colPrecio;
+    @FXML private TableColumn<RegistrosProductos, Integer> colStock;
+    @FXML private TableColumn<RegistrosProductos, LocalDate> colFechaCaducidad;
+
+    @FXML private TextField txtIdProducto;
+    @FXML private TextField txtNombreProducto;
+    @FXML private TextField txtMarca;
+    @FXML private TextField txtPrecio;
+    @FXML private TextField txtStock;
+    @FXML private DatePicker dpFechaCaducidad;
+
+    @FXML private Button btnNuevo;
+    @FXML private Button btnEditar;
+    @FXML private Button btnEliminar;
+    @FXML private Button btnCancelar;
+    @FXML private Button btnGuardar;
+    @FXML private Button btnRegresar;
+
+    @FXML private Button btnAnterior;
+    @FXML private Button btnSiguiente;
+
+    @FXML private TextField txtBuscar;
+    @FXML private ComboBox<String> cmbFiltroBusqueda;
+
     private ObservableList<RegistrosProductos> listaProductos;
-    private RegistrosProductos modeloProductos ;
-    private enum acciones{Agregar,Eliminar,Editar,Ninguna};
-    acciones tipoDeAccion = acciones.Ninguna;
+    private RegistrosProductos modeloProducto;
+    private Main principal;
+
+    private enum Accion { AGREGAR, EDITAR, NINGUNA }
+    private Accion tipoAccion = Accion.NINGUNA;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        configurarColumnas();
+        cargarProductos();
+        tablaProductos.setOnMouseClicked(e -> cargarTextFields());
+
+        cmbFiltroBusqueda.getItems().addAll("Buscar por:", "ID", "Nombre", "Marca", "Precio", "Stock");
+        cmbFiltroBusqueda.getSelectionModel().selectFirst();
+
+        cambiarEstadoCampos(true);
+        habilitarBotones(true);
+    }
+
     public void setPrincipal(Main principal) {
         this.principal = principal;
     }
- 
-    public Main getPrincipal() {
-        return principal;
+
+    private void configurarColumnas() {
+        colIdProducto.setCellValueFactory(new PropertyValueFactory<>("idProducto"));
+        colNombreProducto.setCellValueFactory(new PropertyValueFactory<>("nombreProducto"));
+        colMarca.setCellValueFactory(new PropertyValueFactory<>("marca"));
+        colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
+        colStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        colFechaCaducidad.setCellValueFactory(new PropertyValueFactory<>("fechaDeCaducidad"));
     }
 
-    @Override
-
-    public void initialize(URL url, ResourceBundle rb) {
-        // Inicializar de primero lo que haya aqui
-        configurarColumnas();
-        cargarTablaCitas();
-        // expresion lambda
-        tablaProductos.setOnMouseClicked(eh -> cargarCitasTextField());
-        cmbFiltroBusqueda.getItems().addAll(" Buscar Por :","ID", "Nombre", "Marca", "Precio", "Stock");
-        cmbFiltroBusqueda.getSelectionModel().selectFirst(); // selecciona el primero por defecto
-    }    
-
-    public void configurarColumnas(){
-        //Formato de columnas
-        colIdProducto.setCellValueFactory(new PropertyValueFactory<RegistrosProductos,Integer>("idProducto"));
-        colNombreProducto.setCellValueFactory(new PropertyValueFactory<RegistrosProductos,String>("nombreProducto"));
-        colMarca.setCellValueFactory(new PropertyValueFactory<RegistrosProductos, String>("marca"));
-        colPrecio.setCellValueFactory(new PropertyValueFactory<RegistrosProductos, Integer>("precio"));
-        colStock.setCellValueFactory(new PropertyValueFactory<RegistrosProductos, Integer>("stock"));
-
-    }
-
-    public void cargarTablaCitas(){
+    private void cargarProductos() {
         listaProductos = FXCollections.observableArrayList(listarProductos());
         tablaProductos.setItems(listaProductos);
         tablaProductos.getSelectionModel().selectFirst();
-        cargarCitasTextField();
+        cargarTextFields();
     }
-    
-    public void cargarCitasTextField (){
-        // tabla clientes -> modelo = propidades de TEXTFIELD
-        RegistrosProductos citaSeleccionada = tablaProductos.getSelectionModel().getSelectedItem();
-        if(citaSeleccionada != null ){
-        txtIdProducto.setText(String.valueOf(citaSeleccionada.getIdProducto()));
-        txtNombreProducto.setText(citaSeleccionada.getNombreProducto());
-        txtMarca.setText(citaSeleccionada.getMarca());
-        txtPrecio.setText(String.valueOf(citaSeleccionada.getPrecio()));
-        txtStock.setText(String.valueOf(citaSeleccionada.getStock()));
-        }
-        
-    }
-    
-    public ArrayList<RegistrosProductos> listarProductos(){
+
+    private ArrayList<RegistrosProductos> listarProductos() {
         ArrayList<RegistrosProductos> productos = new ArrayList<>();
         try {
-            ResultSet resultado = Conexion.getInstancia().getConexion()
-                    .prepareCall("call sp_listarProductos();").executeQuery();
-            while (resultado.next()) {
-                productos.add ( new RegistrosProductos(
-                        resultado.getInt(1),
-                        resultado.getString(2),
-                        resultado.getString(3),
-                        resultado.getDouble(4),
-                        resultado.getInt(5)));
+            CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_listarProductos();");
+            ResultSet rs = cs.executeQuery();
+            while (rs.next()) {
+                productos.add(new RegistrosProductos(
+                        rs.getInt("idProducto"),
+                        rs.getString("nombreProducto"),
+                        rs.getString("marca"),
+                        rs.getDouble("precio"),
+                        rs.getInt("stock"),
+                        rs.getDate("fechaDeCaducidad") != null ? rs.getDate("fechadeCaducidad").toLocalDate() : null
+                ));
             }
-        } catch (SQLException ex) {
-            System.out.println("Error " + ex.getSQLState());   
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return productos;
     }
-    
-    public RegistrosProductos obtenerModeloProductos(){
-        int codigoProducto ;
-        if (txtIdProducto.getText().isEmpty()) {
-          codigoProducto = 1 ;  
-        }else {
-            codigoProducto = Integer.parseInt(txtIdProducto.getText());
-        }
-        String nombreProducto = txtNombreProducto.getText();
-        String marca = txtMarca.getText();
-        Double precio = Double.parseDouble(txtPrecio.getText());
-        int stock = Integer.parseInt(txtStock.getText());
-        RegistrosProductos producto = new RegistrosProductos(codigoProducto, nombreProducto, marca, precio, stock);
-        return producto ;
+
+    private RegistrosProductos obtenerModelo() {
+        int id = txtIdProducto.getText().isEmpty() ? 0 : Integer.parseInt(txtIdProducto.getText());
+        LocalDate fechaCaducidad = dpFechaCaducidad.getValue();
+        return new RegistrosProductos(
+                id,
+                txtNombreProducto.getText(),
+                txtMarca.getText(),
+                Double.parseDouble(txtPrecio.getText()),
+                Integer.parseInt(txtStock.getText()),
+                fechaCaducidad
+        );
     }
-    
-    public void AgregarProductos(){
-        modeloProductos = obtenerModeloProductos();
-        try {
-            CallableStatement enunciado = Conexion.getInstancia().
-                    getConexion().prepareCall("call sp_AgregarProductos(?,?,?,?);");
-            enunciado.setString(1,modeloProductos.getNombreProducto());
-            enunciado.setString(2,modeloProductos.getMarca());
-            enunciado.setDouble(3,modeloProductos.getPrecio());
-            enunciado.setInt(4,modeloProductos.getStock());
-            enunciado.execute();
-            cargarTablaCitas();
-        } catch (SQLException ex) {
-            System.out.println("Error al agregar");
-            ex.printStackTrace();
+
+    private void cargarTextFields() {
+        RegistrosProductos producto = tablaProductos.getSelectionModel().getSelectedItem();
+        if (producto != null) {
+            txtIdProducto.setText(String.valueOf(producto.getIdProducto()));
+            txtNombreProducto.setText(producto.getNombreProducto());
+            txtMarca.setText(producto.getMarca());
+            txtPrecio.setText(String.valueOf(producto.getPrecio()));
+            txtStock.setText(String.valueOf(producto.getStock()));
+            dpFechaCaducidad.setValue(producto.getFechaDeCaducidad());
         }
     }
-    
-    public void actualizarCitas(){
-        modeloProductos = obtenerModeloProductos ();
-        try{
-            CallableStatement enunciado = Conexion.getInstancia().getConexion().
-                    prepareCall("call sp_editarProductos(?,?,?,?,?);");
-            enunciado.setInt(1,modeloProductos.getIdProducto());
-            enunciado.setString(2,modeloProductos.getNombreProducto());
-            enunciado.setString(3,modeloProductos.getMarca());
-            enunciado.setDouble(4,modeloProductos.getPrecio());
-            enunciado.setInt(5,modeloProductos.getStock());
-            enunciado.execute();
-            cargarTablaCitas();    
-        }catch(SQLException e){
-            System.out.println("Error al editar");
-            e.printStackTrace();
-        }
-    }
-    
-    public void eliminarMascotas(){
-        modeloProductos = obtenerModeloProductos();
-        try{
-            CallableStatement enunciado = Conexion.getInstancia().getConexion().
-                    prepareCall("call sp_eliminarProductos(?);");
-            enunciado.setInt(1,modeloProductos.getIdProducto());
-            enunciado.execute();
-            cargarTablaCitas();
-        }catch(SQLException ex){
-            System.out.println("Error al eliminar");
-            ex.printStackTrace();
-        }
-    }
-    
-    public void limpiarTexTField () {
+
+    private void limpiarCampos() {
         txtIdProducto.clear();
         txtNombreProducto.clear();
         txtMarca.clear();
         txtPrecio.clear();
         txtStock.clear();
-}
+        dpFechaCaducidad.setValue(null);
+    }
 
-    
-    public void cambiarEstado (boolean estado){
+    private void cambiarEstadoCampos(boolean estado) {
         txtNombreProducto.setDisable(estado);
         txtMarca.setDisable(estado);
         txtPrecio.setDisable(estado);
         txtStock.setDisable(estado);
-        
+        dpFechaCaducidad.setDisable(estado);
     }
-    
-    public void habilitarDeshabilitarNodo (){
-        boolean desactivado = txtNombreProducto.isDisable();
-        cambiarEstado(!desactivado);
-        btnSiguiente.setDisable(desactivado);
-        btnAnterior.setDisable(desactivado);
-        btnNuevo.setDisable(desactivado);
-        btnEditar.setDisable(desactivado);
-        btnEliminar.setDisable(desactivado);
-        btnGuardar.setDisable(!desactivado);
-        btnCancelar.setDisable(!desactivado);
-      
+
+    private void habilitarBotones(boolean estado) {
+        btnNuevo.setDisable(!estado);
+        btnEditar.setDisable(!estado);
+        btnEliminar.setDisable(!estado);
+        btnGuardar.setDisable(estado);
+        btnCancelar.setDisable(estado);
     }
-    
-    // Botones 
+
     @FXML
-    private void btnNuevoAction(){
-        limpiarTexTField();
-        txtNombreProducto.requestFocus();
-        tipoDeAccion = acciones.Agregar;
-        habilitarDeshabilitarNodo();
+    private void btnNuevoAction() {
+        limpiarCampos();
+        cambiarEstadoCampos(false);
+        habilitarBotones(false);
+        tipoAccion = Accion.AGREGAR;
     }
-    
-    @FXML 
-    private void btnEditarAction (){
-        tipoDeAccion = acciones.Editar;
-            habilitarDeshabilitarNodo();
-    }
-    
-    @FXML 
-    private void btnEliminarAction (){
-        eliminarMascotas();
-        tipoDeAccion = acciones.Eliminar;
-    }
-    
+
     @FXML
-    private void btnCancelarAction (){
-        cargarCitasTextField();
-            habilitarDeshabilitarNodo();
+    private void btnEditarAction() {
+        cambiarEstadoCampos(false);
+        habilitarBotones(false);
+        tipoAccion = Accion.EDITAR;
     }
+
     @FXML
-    private void btnAnteriorAction (){
-        int indice = tablaProductos.getSelectionModel().getSelectedIndex();
-        if (indice > 0 ) {
-            tablaProductos.getSelectionModel().select(indice - 1);
-            cargarCitasTextField();
+    private void btnEliminarAction() {
+        modeloProducto = obtenerModelo();
+        try {
+            CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_eliminarProductos(?);");
+            cs.setInt(1, modeloProducto.getIdProducto());
+            cs.execute();
+            cargarProductos();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
+
     @FXML
-    private void btnSiguienteAction (){
-        int indice = tablaProductos.getSelectionModel().getSelectedIndex();
-        if (indice < listaProductos.size()-1 ) {
-            tablaProductos.getSelectionModel().select(indice + 1);
-            cargarCitasTextField();
-        }
-    }
-    
-    @FXML 
-    private void btnGuardarAction (){
-        if (tipoDeAccion == acciones.Agregar) {
-            AgregarProductos();
-            tipoDeAccion = acciones.Ninguna;
-        }else if (tipoDeAccion == acciones.Editar){
-            actualizarCitas();
-            tipoDeAccion = acciones.Ninguna;
-        }
-            habilitarDeshabilitarNodo();
-    }
-    
-    @FXML
-        private void BuscarID() {
-            ArrayList<RegistrosProductos> resultadoBusqueda = new ArrayList<>();
-            String textoBusqueda = txtBuscar.getText().trim();
-            String filtro = cmbFiltroBusqueda.getValue();
-
-            if (textoBusqueda.isEmpty() || filtro == null) {
-                tablaProductos.setItems(FXCollections.observableArrayList(listaProductos));
-                return;
-            }
-
-            for (RegistrosProductos producto : listaProductos) {
-                switch (filtro) {
-                    case "ID":
-                        try {
-                            int idBuscado = Integer.parseInt(textoBusqueda);
-                            if (producto.getIdProducto() == idBuscado) {
-                                resultadoBusqueda.add(producto);
-                            }
-                        } catch (NumberFormatException e) {
-                            System.out.println("ID inválido");
-                        }
-                        break;
-
-                    case "Nombre":
-                        if (producto.getNombreProducto().toLowerCase().contains(textoBusqueda.toLowerCase())) {
-                            resultadoBusqueda.add(producto);
-                        }
-                        break;
-
-                    case "Marca":
-                        if (producto.getMarca().toLowerCase().contains(textoBusqueda.toLowerCase())) {
-                            resultadoBusqueda.add(producto);
-                        }
-                        break;
-
-                    case "Precio":
-                        try {
-                            double precio = Double.parseDouble(textoBusqueda);
-                            if (producto.getPrecio() == precio) {
-                                resultadoBusqueda.add(producto);
-                            }
-                        } catch (NumberFormatException e) {
-                            System.out.println("Precio inválido");
-                        }
-                        break;
-
-                    case "Stock":
-                        try {
-                            int stock = Integer.parseInt(textoBusqueda);
-                            if (producto.getStock() == stock) {
-                                resultadoBusqueda.add(producto);
-                            }
-                        } catch (NumberFormatException e) {
-                            System.out.println("Stock inválido");
-                        }
-                        break;
+    private void btnGuardarAction() {
+        modeloProducto = obtenerModelo();
+        try {
+            CallableStatement cs;
+            if (tipoAccion == Accion.AGREGAR) {
+                cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_agregarProductos(?, ?, ?, ?, ?);");
+                cs.setString(1, modeloProducto.getNombreProducto());
+                cs.setString(2, modeloProducto.getMarca());
+                cs.setDouble(3, modeloProducto.getPrecio());
+                cs.setInt(4, modeloProducto.getStock());
+                if (modeloProducto.getFechaDeCaducidad() != null) {
+                    cs.setDate(5, Date.valueOf(modeloProducto.getFechaDeCaducidad()));
+                } else {
+                    cs.setNull(5, Types.DATE);
+                }
+            } else {
+                cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_editarProductos(?, ?, ?, ?, ?, ?);");
+                cs.setInt(1, modeloProducto.getIdProducto());
+                cs.setString(2, modeloProducto.getNombreProducto());
+                cs.setString(3, modeloProducto.getMarca());
+                cs.setDouble(4, modeloProducto.getPrecio());
+                cs.setInt(5, modeloProducto.getStock());
+                if (modeloProducto.getFechaDeCaducidad() != null) {
+                    cs.setDate(6, Date.valueOf(modeloProducto.getFechaDeCaducidad()));
+                } else {
+                    cs.setNull(6, Types.DATE);
                 }
             }
+            cs.execute();
+            cargarProductos();
+            cambiarEstadoCampos(true);
+            habilitarBotones(true);
+            tipoAccion = Accion.NINGUNA;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-            if (resultadoBusqueda.isEmpty()) {
-                tablaProductos.setItems(FXCollections.observableArrayList(listaProductos));
-            } else {
-                tablaProductos.setItems(FXCollections.observableArrayList(resultadoBusqueda));
-                tablaProductos.getSelectionModel().selectFirst();
+    @FXML
+    private void btnCancelarAction() {
+        cargarTextFields();
+        cambiarEstadoCampos(true);
+        habilitarBotones(true);
+        tipoAccion = Accion.NINGUNA;
+    }
+
+    @FXML
+    private void btnRegresarAction(ActionEvent e) {
+        if (e.getSource() == btnRegresar) {
+            principal.Inicio();
+        }
+    }
+
+    @FXML
+    private void buscarProducto() {
+        String filtro = cmbFiltroBusqueda.getValue();
+        String texto = txtBuscar.getText().trim().toLowerCase();
+
+        if (filtro == null || texto.isEmpty() || filtro.equals("Buscar por:")) {
+            tablaProductos.setItems(listaProductos);
+            return;
+        }
+
+        ArrayList<RegistrosProductos> resultados = new ArrayList<>();
+        for (RegistrosProductos prod : listaProductos) {
+            switch (filtro) {
+                case "ID":
+                    try {
+                        int idBuscado = Integer.parseInt(texto);
+                        if (prod.getIdProducto() == idBuscado) resultados.add(prod);
+                    } catch (NumberFormatException e) {
+                        System.out.println("ID inválido");
+                    }
+                    break;
+                case "Nombre":
+                    if (prod.getNombreProducto().toLowerCase().contains(texto)) resultados.add(prod);
+                    break;
+                case "Marca":
+                    if (prod.getMarca().toLowerCase().contains(texto)) resultados.add(prod);
+                    break;
+                case "Precio":
+                    try {
+                        double precio = Double.parseDouble(texto);
+                        if (prod.getPrecio() == precio) resultados.add(prod);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Precio inválido");
+                    }
+                    break;
+                case "Stock":
+                    try {
+                        int stock = Integer.parseInt(texto);
+                        if (prod.getStock() == stock) resultados.add(prod);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Stock inválido");
+                    }
+                    break;
             }
         }
 
+        tablaProductos.setItems(FXCollections.observableArrayList(resultados));
+        if (!resultados.isEmpty()) {
+            tablaProductos.getSelectionModel().selectFirst();
+            cargarTextFields();
+        }
+    }
 
     @FXML
-        private void Regresar(ActionEvent evento){
-        if (evento.getSource()== btnRegresar){
-            principal.Inicio();
-            }    
+    private void btnAnteriorAction() {
+        int indice = tablaProductos.getSelectionModel().getSelectedIndex();
+        if (indice > 0) {
+            tablaProductos.getSelectionModel().select(indice - 1);
+            cargarTextFields();
         }
-}
+    }
 
- 
+    @FXML
+    private void btnSiguienteAction() {
+        int indice = tablaProductos.getSelectionModel().getSelectedIndex();
+        if (indice < listaProductos.size() - 1) {
+            tablaProductos.getSelectionModel().select(indice + 1);
+            cargarTextFields();
+        }
+    }
+}

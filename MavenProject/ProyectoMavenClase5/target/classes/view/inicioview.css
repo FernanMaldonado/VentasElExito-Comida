@@ -3,7 +3,7 @@
  */
 
 .mainFxmlClass {
-
+    -fx-background-color:#ffffff;
 }
 
 .titulo {
@@ -14,18 +14,61 @@
 
 
 .boton {
-    -fx-background-color: #3498db; /* azul medio */
-    -fx-text-fill: white;          /* texto blanco */
+    -fx-background-color: #ffffff; /* fondo blanco */
+    -fx-text-fill: #000000;        /* texto azul medio */
     -fx-font-size: 25px;
     -fx-padding: 20px;
-    -fx-background-radius: 8px;
+    -fx-background-radius: 0 0 8px 8px; /* redondeo solo en esquinas inferiores */
+    -fx-border-radius: 0 0 8px 8px;     /* igual que background para el borde */
+    -fx-border-color: grey;            /* borde gris */
+    -fx-border-width: 2px;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 3, 0.5, 0, 2);
-    -fx-transition: all 0.3s ease;
+    -fx-font-family: "Circular", "Arial", sans-serif;
+    -fx-font-weight: bold;
 }
 
 .boton:hover {
-    -fx-background-color: #2980b9; /* azul más oscuro en hover */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0.7, 0, 3);
+    -fx-border-color: black;  
+     -fx-border-width: 3px;/* cambia el borde a negro al pasar el mouse */
 }
 
+.Borde {
+     -fx-border-color: grey;  
+     -fx-border-width: 1px;
+}
+
+.Borde:hover {
+     -fx-border-color: black;  
+     -fx-border-width: 3px;
+}
+
+.BARRA {
+    -fx-background-color :#593622;
+}
+
+.TituloPedidos {
+    -fx-font-family: "Circular", "Arial", sans-serif;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F42536;
+}
+
+.Imagen {
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-radius: 8 8 0 0; /* Esta propiedad NO existe en JavaFX, puedes ignorarla */
+    -fx-background-color: transparent; /* O un color si deseas */
+    -fx-padding: 0;
+}
+
+.InicioButton {
+    -fx-background-color: #F2B988;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+    -fx-cursor: hand;
+}
+
+.InicioButton MenuItem{
+    -fx-background-color: #F2B988;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+    -fx-cursor: hand;
+}

@@ -1,27 +1,51 @@
 package org.fernandomaldonado.controller;
+
 import org.fernandomaldonado.conexion.Conexion;
-import java.net.URL;
-import java.util.ResourceBundle;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import java.sql.*;
 import javafx.event.ActionEvent;
 import org.fernandomaldonado.system.Main;
 
-    public class LoginController {
+public class LoginController {
+
     private Main principal;
-    @FXML
-    private TextField txtUsuario;
-    @FXML
-    private Button btnRegresar;
-    
-    @FXML
-    private PasswordField txtPassword;
+
+    @FXML private TextField txtUsuario;
+    @FXML private PasswordField txtPassword;
+    @FXML private TextField txtPasswordVisible;
+    @FXML private CheckBox cbMostrarPassword;
+
+    @FXML private Button btnRegresar;
+    @FXML private Label lblMensaje;
+
+    public void setPrincipal(Main principal) {
+        this.principal = principal;
+    }
 
     @FXML
-    private Label lblMensaje;
+    public void initialize() {
+        // Sincronizar el texto entre txtPassword y txtPasswordVisible
+        txtPasswordVisible.textProperty().bindBidirectional(txtPassword.textProperty());
+
+        // Checkbox para mostrar/ocultar contraseña
+        cbMostrarPassword.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            if (isSelected) {
+                txtPasswordVisible.setVisible(true);
+                txtPasswordVisible.setManaged(true);
+                txtPassword.setVisible(false);
+                txtPassword.setManaged(false);
+            } else {
+                txtPasswordVisible.setVisible(false);
+                txtPasswordVisible.setManaged(false);
+                txtPassword.setVisible(true);
+                txtPassword.setManaged(true);
+            }
+        });
+    }
 
     @FXML
     private void loginAction() {
@@ -53,17 +77,11 @@ import org.fernandomaldonado.system.Main;
             lblMensaje.setText("Error en la conexión");
         }
     }
-    
+
     @FXML
-        private void Regresar(ActionEvent evento){
-        if (evento.getSource()== btnRegresar){
+    private void Regresar(ActionEvent evento){
+        if (evento.getSource() == btnRegresar){
             principal.PantallaInicio();
-            }    
-        }
-        
-    public void setPrincipal(Main principal) {
-        this.principal = principal;
+        }    
     }
-
 }
-

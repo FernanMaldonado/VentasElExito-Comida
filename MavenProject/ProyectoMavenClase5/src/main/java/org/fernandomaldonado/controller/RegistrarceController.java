@@ -26,6 +26,8 @@ public class RegistrarceController implements Initializable {
     @FXML private DatePicker txtFechaNacimiento;
 
     @FXML private Button btnNuevo, btnEditar, btnEliminar, btnCancelar, btnGuardar, btnRegresar;
+    @FXML private TextField txtBuscar;
+    @FXML private ComboBox<String> cmbFiltroBusqueda;
 
     private ObservableList<Registro> listaUsuarios;
     private Registro modeloUsuario;
@@ -39,6 +41,9 @@ public class RegistrarceController implements Initializable {
         configurarColumnas();
         cargarUsuarios();
         tablaUsuarios.setOnMouseClicked(e -> cargarTextFields());
+        cmbFiltroBusqueda.getItems().addAll("Buscar por:", "ID", "Username", "Nombre", "Correo", "Teléfono");
+        cmbFiltroBusqueda.getSelectionModel().selectFirst();
+
     }
 
     public void setPrincipal(Main principal) {
@@ -46,7 +51,7 @@ public class RegistrarceController implements Initializable {
     }
 
     private void configurarColumnas() {
-        colIdRegistro.setCellValueFactory(new PropertyValueFactory<>("idRegistro"));
+        colIdRegistro.setCellValueFactory(new PropertyValueFactory<>("idUsuario"));
         colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
         colNombreCompleto.setCellValueFactory(new PropertyValueFactory<>("nombreCompleto"));
         colCorreoElectronico.setCellValueFactory(new PropertyValueFactory<>("correoElectronico"));
@@ -100,7 +105,7 @@ public class RegistrarceController implements Initializable {
     private void cargarTextFields() {
         Registro usuario = tablaUsuarios.getSelectionModel().getSelectedItem();
         if (usuario != null) {
-            txtIdRegistro.setText(String.valueOf(usuario.getIdRegistro()));
+            txtIdRegistro.setText(String.valueOf(usuario.getIdUsuario()));
             txtUsername.setText(usuario.getUsername());
             txtNombreCompleto.setText(usuario.getNombreCompleto());
             txtCorreoElectronico.setText(usuario.getCorreoElectronico());
@@ -157,7 +162,7 @@ public class RegistrarceController implements Initializable {
         modeloUsuario = obtenerModelo();
         try {
             CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_eliminar_usuario(?);");
-            cs.setInt(1, modeloUsuario.getIdRegistro());
+            cs.setInt(1, modeloUsuario.getIdUsuario());
             cs.execute();
             cargarUsuarios();
         } catch (SQLException ex) {
@@ -181,13 +186,13 @@ public class RegistrarceController implements Initializable {
 
             } else {
                 cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_actualizar_usuario(?, ?, ?, ?, ?, ?, ?);");
-                cs.setInt(1, modeloUsuario.getIdRegistro());
+                cs.setInt(1, modeloUsuario.getIdUsuario());
                 cs.setString(2, modeloUsuario.getNombreCompleto());
                 cs.setString(3, modeloUsuario.getCorreoElectronico());
                 cs.setString(4, modeloUsuario.getPassword());
                 cs.setString(5, modeloUsuario.getNumeroTelefono());
-                cs.setDate(6, java.sql.Date.valueOf(modeloUsuario.getFechaNacimiento()));
-                cs.setString(7, modeloUsuario.getUsername());
+                cs.setString(6, modeloUsuario.getUsername());
+                cs.setDate(7, java.sql.Date.valueOf(modeloUsuario.getFechaNacimiento()));
             }
             cs.execute();
             cargarUsuarios();
@@ -213,4 +218,58 @@ public class RegistrarceController implements Initializable {
             principal.Inicio();
         }
     }
+    
+    @FXML
+private void buscarUsuario() {
+    String filtro = cmbFiltroBusqueda.getValue();
+    String texto = txtBuscar.getText().trim().toLowerCase();
+    
+    if (filtro == null || texto.isEmpty() || filtro.equals("Buscar por:")) {
+        tablaUsuarios.setItems(listaUsuarios); // Muestra todo si está vacío
+        return;
+    }
+
+    ArrayList<Registro> resultados = new ArrayList<>();
+    for (Registro user : listaUsuarios) {
+        switch (filtro) {
+            case "ID":
+                try {
+                    int idBuscado = Integer.parseInt(texto);
+                    if (user.getIdUsuario() == idBuscado) {
+                        resultados.add(user);
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("ID inválido");
+                }
+                break;
+            case "Username":
+                if (user.getUsername().toLowerCase().contains(texto)) {
+                    resultados.add(user);
+                }
+                break;
+            case "Nombre":
+                if (user.getNombreCompleto().toLowerCase().contains(texto)) {
+                    resultados.add(user);
+                }
+                break;
+            case "Correo":
+                if (user.getCorreoElectronico().toLowerCase().contains(texto)) {
+                    resultados.add(user);
+                }
+                break;
+            case "Teléfono":
+                if (user.getNumeroTelefono().toLowerCase().contains(texto)) {
+                    resultados.add(user);
+                }
+                break;
+        }
+    }
+
+    tablaUsuarios.setItems(FXCollections.observableArrayList(resultados));
+    if (!resultados.isEmpty()) {
+        tablaUsuarios.getSelectionModel().selectFirst();
+        cargarTextFields();
+    }
+}
+
 }

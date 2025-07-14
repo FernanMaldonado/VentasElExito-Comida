@@ -15,7 +15,12 @@ public class RegistrarUsuarioController {
     @FXML private TextField txtUsername;
     @FXML private TextField txtNombreCompleto;
     @FXML private TextField txtCorreoElectronico;
+
     @FXML private PasswordField txtContrasena;
+    @FXML private TextField txtContrasenaVisible;
+
+    @FXML private CheckBox cbMostrarContrasena;
+
     @FXML private TextField txtNumeroTelefono;
     @FXML private DatePicker txtFechaNacimiento;
 
@@ -26,6 +31,26 @@ public class RegistrarUsuarioController {
 
     public void setPrincipal(Main principal) {
         this.principal = principal;
+    }
+
+    public void initialize() {
+        // Sincronizar texto de contraseña
+        txtContrasenaVisible.textProperty().bindBidirectional(txtContrasena.textProperty());
+
+        // Mostrar/ocultar contraseña
+        cbMostrarContrasena.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            if (isSelected) {
+                txtContrasenaVisible.setVisible(true);
+                txtContrasenaVisible.setManaged(true);
+                txtContrasena.setVisible(false);
+                txtContrasena.setManaged(false);
+            } else {
+                txtContrasenaVisible.setVisible(false);
+                txtContrasenaVisible.setManaged(false);
+                txtContrasena.setVisible(true);
+                txtContrasena.setManaged(true);
+            }
+        });
     }
 
     private Registro obtenerModelo() {
@@ -71,9 +96,9 @@ public class RegistrarUsuarioController {
             Alert alerta = new Alert(Alert.AlertType.INFORMATION);
             alerta.setTitle("Registro exitoso");
             alerta.setHeaderText(null);
-            alerta.setContentText("¡Usuario registrado correctamente!");
+            alerta.setContentText("¡Usuario registrado correctamente! Presione 'Aceptar' para iniciar sesión.");
             alerta.showAndWait();
-            principal.Inicio();
+            principal.Login();
             limpiarCampos();
 
         } catch (SQLException e) {

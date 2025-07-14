@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import org.fernandomaldonado.system.Main;
 
 /**
@@ -16,13 +17,11 @@ import org.fernandomaldonado.system.Main;
 public class InicioController implements Initializable {
     private Main principal;
 
-@FXML private Button btnIniciar;
-
+@FXML private Button btnIniciar,btnClientes,btnCompras;
+@FXML private MenuItem btnCerrar;
     public void setPrincipal(Main principal) {
         this.principal = principal;
     }
-    
-    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -34,6 +33,12 @@ public class InicioController implements Initializable {
         if (evento.getSource() == btnIniciar) {
             System.out.println("Iniciando...");
             principal.RegistrosProductos();
+        }else if(evento.getSource() == btnCerrar){
+            principal.PantallaInicio();
+        }else if(evento.getSource() == btnClientes){
+            principal.Registro();
+        }else if(evento.getSource() == btnCompras){
+            principal.Compras();
         }
     }
     

@@ -31,3 +31,9 @@
     -fx-font-size: 24px;
     -fx-text-fill: #004080;
 }
+
+.TituloPedidos {
+    -fx-font-family: "Circular", "Arial", sans-serif;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F42536;
+}
