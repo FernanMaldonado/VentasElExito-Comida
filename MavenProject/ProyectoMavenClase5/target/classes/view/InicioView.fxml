@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@inicioview.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.InicioController">
    <children>
-      <Text layoutX="165.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="titulo" text="Bienvenido a la gestion de Ventas de &quot;Ventas El Exito&quot;" textAlignment="CENTER" wrappingWidth="498.1826171875" />
-      <Button fx:id="btnIniciar" layoutX="264.0" layoutY="200.0" mnemonicParsing="false" onAction="#clickInicio" prefHeight="175.0" prefWidth="300.0" styleClass="boton" text="Iniciar">
+      <Text layoutX="165.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="titulo" text="Bienvenido a la gestion de Ventas de &quot;Ventas El Exito&quot;" textAlignment="CENTER" wrappingWidth="498.1826171875" />
+      <Button fx:id="btnIniciar" layoutX="493.0" layoutY="243.0" mnemonicParsing="false" onAction="#clickInicio" prefHeight="146.0" prefWidth="227.0" styleClass="boton" text="Inicar">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
+      <ImageView fitHeight="273.0" fitWidth="453.0" layoutX="54.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../java/org/fernandomaldonado/image/logoimprovisado.png" />
+         </image>
+      </ImageView>
+      <Text layoutX="34.0" layoutY="404.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="letras" text="&quot;Más que comida, una experiencia que te transporta a momentos de alegría y celebración, donde cada plato es una obra de arte culinaria creada con pasión y dedicación.&quot; " textAlignment="JUSTIFY" wrappingWidth="312.19989013671875" />
    </children>
 </AnchorPane>

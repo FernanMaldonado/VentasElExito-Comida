@@ -12,6 +12,11 @@
     -fx-text-fill: #2c3e50;
 }
 
+.letras {
+    -fx-text-fill: #3498db;
+    -fx-font-size: 20px;
+}
+
 
 .boton {
     -fx-background-color: #3498db; /* azul medio */
