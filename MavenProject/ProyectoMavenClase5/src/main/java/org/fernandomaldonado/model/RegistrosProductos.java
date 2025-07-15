@@ -114,4 +114,12 @@ public class RegistrosProductos {
     public void setFechaDeCaducidad(LocalDate fechaDeCaducidad) {
         this.fechaDeCaducidad.set(fechaDeCaducidad);
     }
+
+   @Override
+        public String toString() {
+            return "ID: " + idProducto.get() + "\n" +
+                   "PRODUCTO: " + nombreProducto.get() + "\n" +
+                   "MARCA: " + marca.get() + "\n" +
+                   "PRECIO: Q" + precio.get();
+        }
 }

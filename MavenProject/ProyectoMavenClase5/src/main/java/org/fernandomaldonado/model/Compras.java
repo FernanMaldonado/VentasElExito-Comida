@@ -77,9 +77,10 @@ public class Compras {
     }
 
     @Override
-    public String toString() {
-        return "Compras{" + "idCompra=" + idCompra + ", idUsuario=" + idUsuario + ", fechaCompra=" + fechaCompra + ", total=" + total + '}';
-    }
-    
-    
+        public String toString() {
+            return "ID: " + idCompra + "\n" + // Add newline for better readability
+                   "USUARIO: " + idUsuario + "\n" +
+                   "FECHA COMPRAS: " + fechaCompra + "\n" +
+                   "TOTAL: " + total; // Removed the trailing '}'
+        }
 }

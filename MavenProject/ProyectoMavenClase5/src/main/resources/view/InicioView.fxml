@@ -64,5 +64,11 @@
           <MenuItem mnemonicParsing="false" text="Ayuda En Linea" />
         </items>
       </MenuButton>
+      <ImageView fitHeight="165.0" fitWidth="226.0" layoutX="320.0" layoutY="344.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/Carreta.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="btnDetalleCompras" layoutX="289.0" layoutY="451.0" mnemonicParsing="false" onAction="#clickInicio" prefHeight="89.0" prefWidth="242.0" styleClass="boton" text="Detalle Compras" />
    </children>
 </AnchorPane>

@@ -17,7 +17,7 @@ import org.fernandomaldonado.system.Main;
 public class InicioController implements Initializable {
     private Main principal;
 
-@FXML private Button btnIniciar,btnClientes,btnCompras;
+@FXML private Button btnIniciar,btnClientes,btnCompras,btnDetalleCompras;
 @FXML private MenuItem btnCerrar;
     public void setPrincipal(Main principal) {
         this.principal = principal;
@@ -39,6 +39,8 @@ public class InicioController implements Initializable {
             principal.Registro();
         }else if(evento.getSource() == btnCompras){
             principal.Compras();
+        }else if(evento.getSource() == btnDetalleCompras){
+            principal.DetalleCompras();
         }
     }
     

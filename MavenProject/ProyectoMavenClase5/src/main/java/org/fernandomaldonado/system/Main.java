@@ -10,7 +10,9 @@ import org.fernandomaldonado.controller.RegistrosProductosController;
 
 import java.io.IOException;
 import javafx.scene.image.Image;
+import org.fernandomaldonado.controller.CompraCliente;
 import org.fernandomaldonado.controller.ComprasController;
+import org.fernandomaldonado.controller.DetalleComprasController;
 import org.fernandomaldonado.controller.LoginController;
 import org.fernandomaldonado.controller.PantallaInicioController;
 import org.fernandomaldonado.controller.RegistrarUsuarioController;
@@ -49,6 +51,8 @@ public class Main extends Application {
             Scene escena = new Scene(archivoFXML, ancho, alto);
             escenarioPrincipal.setScene(escena);
             escenarioPrincipal.sizeToScene();
+            escenarioPrincipal.centerOnScreen(); 
+
 
             return cargadorFXML.getController();
 
@@ -74,7 +78,7 @@ public class Main extends Application {
     }
 
     public void RegistrosProductos() {
-        RegistrosProductosController rp = cambiarEntreEscenas("RegistrosProductosView.fxml", 875, 700);
+        RegistrosProductosController rp = cambiarEntreEscenas("RegistrosProductosView.fxml", 1000, 800);
         if (rp != null) {
             rp.setPrincipal(this);
         } else {
@@ -101,7 +105,7 @@ public class Main extends Application {
     }
     
     public void Registro() {
-        RegistrarceController rp = cambiarEntreEscenas("RegistrarceView.fxml", 975, 700);
+        RegistrarceController rp = cambiarEntreEscenas("RegistrarceView.fxml", 1100, 750);
         if (rp != null) {
             rp.setPrincipal(this);
         } else {
@@ -121,6 +125,24 @@ public class Main extends Application {
     
     public void Compras() {
         ComprasController rp = cambiarEntreEscenas("ComprasView.fxml", 1000, 600);
+        if (rp != null) {
+            rp.setPrincipal(this);
+        } else {
+            System.err.println("No se pudo cargar la vista de Registros de Productos o su controlador es nulo.");
+        }
+    }
+    
+    public void DetalleCompras() {
+        DetalleComprasController rp = cambiarEntreEscenas("DetalleComprasView.fxml", 1000, 750);
+        if (rp != null) {
+            rp.setPrincipal(this);
+        } else {
+            System.err.println("No se pudo cargar la vista de Registros de Productos o su controlador es nulo.");
+        }
+    }
+    
+    public void ClienteCompra() {
+        CompraCliente rp = cambiarEntreEscenas("CompraCliente.fxml", 600, 600);
         if (rp != null) {
             rp.setPrincipal(this);
         } else {

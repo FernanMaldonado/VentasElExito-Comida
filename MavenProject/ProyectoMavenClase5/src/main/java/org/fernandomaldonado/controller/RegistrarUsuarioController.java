@@ -24,6 +24,8 @@ public class RegistrarUsuarioController {
     @FXML private TextField txtNumeroTelefono;
     @FXML private DatePicker txtFechaNacimiento;
 
+    @FXML private ComboBox<String> cbmTipoDeCuenta; // <-- Nuevo ComboBox
+
     @FXML private Button btnRegistrar;
     @FXML private Button btnRegresar;
 
@@ -34,6 +36,10 @@ public class RegistrarUsuarioController {
     }
 
     public void initialize() {
+        // Inicializar opciones del ComboBox tipo de cuenta
+        cbmTipoDeCuenta.getItems().addAll("Administrador", "Usuario");
+        cbmTipoDeCuenta.getSelectionModel().select("Usuario"); // valor por defecto
+
         // Sincronizar texto de contraseña
         txtContrasenaVisible.textProperty().bindBidirectional(txtContrasena.textProperty());
 
@@ -61,7 +67,8 @@ public class RegistrarUsuarioController {
             txtCorreoElectronico.getText(),
             txtContrasena.getText(),
             txtNumeroTelefono.getText(),
-            txtFechaNacimiento.getValue()
+            txtFechaNacimiento.getValue(),
+            cbmTipoDeCuenta.getValue()  // <-- Nuevo campo
         );
     }
 
@@ -72,13 +79,14 @@ public class RegistrarUsuarioController {
         txtContrasena.clear();
         txtNumeroTelefono.clear();
         txtFechaNacimiento.setValue(null);
+        cbmTipoDeCuenta.getSelectionModel().select("Usuario");
     }
 
     @FXML
     private void btnRegistrarAction() {
         Registro nuevoUsuario = obtenerModelo();
         try {
-            CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_agregar_usuario(?, ?, ?, ?, ?, ?);");
+            CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_agregar_usuario(?, ?, ?, ?, ?, ?, ?);");
             cs.setString(1, nuevoUsuario.getUsername());
             cs.setString(2, nuevoUsuario.getNombreCompleto());
             cs.setString(3, nuevoUsuario.getCorreoElectronico());
@@ -90,6 +98,8 @@ public class RegistrarUsuarioController {
             } else {
                 cs.setNull(6, Types.DATE);
             }
+
+            cs.setString(7, nuevoUsuario.getTipoDeCuenta()); // <-- Nuevo parámetro
 
             cs.execute();
 

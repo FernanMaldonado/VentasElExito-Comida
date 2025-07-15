@@ -32,7 +32,8 @@ public class ComprasController implements Initializable {
 
     @FXML private TextField txtIdCompra;
     @FXML private DatePicker dpFechaCompra;
-    @FXML private TextField txtTotal;
+    // Elimina esta línea:
+    // @FXML private TextField txtTotal;
 
     @FXML private ComboBox<Registro> cmbUsuarios;
 
@@ -87,7 +88,8 @@ public class ComprasController implements Initializable {
                         rs.getString("correoElectronico"),
                         rs.getString("password"),
                         rs.getString("numeroTelefono"),
-                        rs.getDate("fechaNacimiento") != null ? rs.getDate("fechaNacimiento").toLocalDate() : null
+                        rs.getDate("fechaNacimiento") != null ? rs.getDate("fechaNacimiento").toLocalDate() : null,
+                        rs.getString("tipoDeCuenta")
                 );
                 listaUsuarios.add(u);
             }
@@ -136,11 +138,12 @@ public class ComprasController implements Initializable {
             return null;
         }
 
+        // NO se incluye el total porque es automático y no editable
         return new Compras(
                 id,
                 usuarioSeleccionado.getIdUsuario(),
                 fechaCompra,
-                Double.parseDouble(txtTotal.getText())
+                0.0  // total 0 porque el SP lo calcula
         );
     }
 
@@ -149,10 +152,9 @@ public class ComprasController implements Initializable {
         if (compra != null) {
             txtIdCompra.setText(String.valueOf(compra.getIdCompra()));
             dpFechaCompra.setValue(compra.getFechaCompra());
-            txtTotal.setText(String.valueOf(compra.getTotal()));
-
+            // No setear txtTotal porque no existe ya
             for (Registro u : listaUsuarios) {
-                if (u.getIdUsuario()== compra.getIdUsuario()) {
+                if (u.getIdUsuario() == compra.getIdUsuario()) {
                     cmbUsuarios.getSelectionModel().select(u);
                     break;
                 }
@@ -163,14 +165,14 @@ public class ComprasController implements Initializable {
     private void limpiarCampos() {
         txtIdCompra.clear();
         dpFechaCompra.setValue(null);
-        txtTotal.clear();
+        // No limpiar txtTotal porque no existe
         cmbUsuarios.getSelectionModel().clearSelection();
     }
 
     private void cambiarEstadoCampos(boolean estado) {
         dpFechaCompra.setDisable(estado);
-        txtTotal.setDisable(estado);
         cmbUsuarios.setDisable(estado);
+        // No tocar txtTotal porque no existe
     }
 
     private void habilitarBotones(boolean estado) {
@@ -226,13 +228,23 @@ public class ComprasController implements Initializable {
                 } else {
                     cs.setNull(2, Types.DATE);
                 }
-                cs.setDouble(3, modeloCompra.getTotal());
+                // Pasa 0.0 porque el total se calcula en la base de datos
+                cs.setDouble(3, 0.0);
             } else if (tipoAccion == Accion.EDITAR) {
-                System.out.println("Edición no implementada en el procedimiento almacenado.");
-                return;
+                cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_actualizar_compra(?, ?, ?, ?);");
+                cs.setInt(1, modeloCompra.getIdCompra());
+                cs.setInt(2, modeloCompra.getIdUsuario());
+                if (modeloCompra.getFechaCompra() != null) {
+                    cs.setDate(3, Date.valueOf(modeloCompra.getFechaCompra()));
+                } else {
+                    cs.setNull(3, Types.DATE);
+                }
+                // Pasa 0.0 porque el total se calcula en la base de datos
+                cs.setDouble(4, 0.0);
             } else {
                 return;
             }
+
             cs.execute();
             cargarCompras();
             cambiarEstadoCampos(true);

@@ -1,3 +1,4 @@
+org\fernandomaldonado\controller\DetalleComprasController.class
 org\fernandomaldonado\controller\InicioController.class
 org\fernandomaldonado\controller\RegistrarceController$Accion.class
 org\fernandomaldonado\controller\RegistrarceController.class
@@ -6,7 +7,10 @@ org\fernandomaldonado\controller\RegistrosProductosController.class
 org\fernandomaldonado\model\Compras.class
 org\fernandomaldonado\controller\RegistrarUsuarioController.class
 org\fernandomaldonado\controller\RegistrosProductosController$Accion.class
+org\fernandomaldonado\controller\DetalleComprasController$Accion.class
 org\fernandomaldonado\system\Main.class
+org\fernandomaldonado\controller\CompraCliente.class
+org\fernandomaldonado\model\DetalleCompras.class
 org\fernandomaldonado\controller\PantallaInicioController.class
 org\fernandomaldonado\conexion\Conexion.class
 org\fernandomaldonado\controller\ComprasController.class

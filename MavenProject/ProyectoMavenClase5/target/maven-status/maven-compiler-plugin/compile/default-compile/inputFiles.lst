@@ -1,12 +1,15 @@
 C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\controller\PantallaInicioController.java
 C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\model\Compras.java
-C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\controller\RegistrarceController.java
-C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\controller\RegistrosProductosController.java
 C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\model\RegistrosProductos.java
 C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\controller\ComprasController.java
 C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\model\Registro.java
 C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\system\Main.java
 C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\controller\InicioController.java
+C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\controller\CompraCliente.java
+C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\controller\DetalleComprasController.java
+C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\controller\RegistrarceController.java
+C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\controller\RegistrosProductosController.java
+C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\model\DetalleCompras.java
 C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\conexion\Conexion.java
 C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\controller\LoginController.java
 C:\VentasElExito-Comida\MavenProject\ProyectoMavenClase5\src\main\java\org\fernandomaldonado\controller\RegistrarUsuarioController.java

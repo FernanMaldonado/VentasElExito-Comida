@@ -22,8 +22,13 @@ public class RegistrarceController implements Initializable {
     @FXML private TableView<Registro> tablaUsuarios;
     @FXML private TableColumn<?, ?> colIdRegistro, colUsername, colNombreCompleto,
             colCorreoElectronico, colpassword, colNumeroTelefono, colFechaNacimiento;
+
+    @FXML private TableColumn<Registro, String> colTipoDeCuenta; // NUEVA COLUMNA
+
     @FXML private TextField txtIdRegistro, txtUsername, txtNombreCompleto, txtCorreoElectronico, txtContrasena, txtNumeroTelefono;
     @FXML private DatePicker txtFechaNacimiento;
+
+    @FXML private ComboBox<String> cmbTipoDeCuenta;  // NUEVO COMBOBOX PARA TIPO DE CUENTA
 
     @FXML private Button btnNuevo, btnEditar, btnEliminar, btnCancelar, btnGuardar, btnRegresar;
     @FXML private TextField txtBuscar;
@@ -41,9 +46,13 @@ public class RegistrarceController implements Initializable {
         configurarColumnas();
         cargarUsuarios();
         tablaUsuarios.setOnMouseClicked(e -> cargarTextFields());
-        cmbFiltroBusqueda.getItems().addAll("Buscar por:", "ID", "Username", "Nombre", "Correo", "Teléfono");
+
+        cmbFiltroBusqueda.getItems().addAll("Buscar por:", "ID", "Username", "Nombre", "Correo", "Teléfono","Tipo De Cuenta");
         cmbFiltroBusqueda.getSelectionModel().selectFirst();
 
+        // Inicializar ComboBox tipoDeCuenta
+        cmbTipoDeCuenta.getItems().addAll("Administrador", "Usuario");
+        cmbTipoDeCuenta.getSelectionModel().select("Usuario"); // Valor por defecto
     }
 
     public void setPrincipal(Main principal) {
@@ -58,6 +67,7 @@ public class RegistrarceController implements Initializable {
         colpassword.setCellValueFactory(new PropertyValueFactory<>("password"));
         colNumeroTelefono.setCellValueFactory(new PropertyValueFactory<>("numeroTelefono"));
         colFechaNacimiento.setCellValueFactory(new PropertyValueFactory<>("fechaNacimiento"));
+        colTipoDeCuenta.setCellValueFactory(new PropertyValueFactory<>("tipoDeCuenta"));
     }
 
     private void cargarUsuarios() {
@@ -80,7 +90,8 @@ public class RegistrarceController implements Initializable {
                     rs.getString("correoElectronico"),
                     rs.getString("password"),
                     rs.getString("numeroTelefono"),
-                    rs.getDate("fechaNacimiento") != null ? rs.getDate("fechaNacimiento").toLocalDate() : null
+                    rs.getDate("fechaNacimiento") != null ? rs.getDate("fechaNacimiento").toLocalDate() : null,
+                    rs.getString("tipoDeCuenta")  // nuevo campo
                 ));
             }
         } catch (SQLException e) {
@@ -98,7 +109,8 @@ public class RegistrarceController implements Initializable {
             txtCorreoElectronico.getText(),
             txtContrasena.getText(),
             txtNumeroTelefono.getText(),
-            txtFechaNacimiento.getValue()
+            txtFechaNacimiento.getValue(),
+            cmbTipoDeCuenta.getValue() // nuevo campo
         );
     }
 
@@ -112,6 +124,7 @@ public class RegistrarceController implements Initializable {
             txtContrasena.setText(usuario.getPassword());
             txtNumeroTelefono.setText(usuario.getNumeroTelefono());
             txtFechaNacimiento.setValue(usuario.getFechaNacimiento());
+            cmbTipoDeCuenta.setValue(usuario.getTipoDeCuenta());  // cargar valor
         }
     }
 
@@ -123,6 +136,7 @@ public class RegistrarceController implements Initializable {
         txtContrasena.clear();
         txtNumeroTelefono.clear();
         txtFechaNacimiento.setValue(null);
+        cmbTipoDeCuenta.getSelectionModel().select("Usuario");  // reset combo
     }
 
     private void cambiarEstadoCampos(boolean estado) {
@@ -132,6 +146,7 @@ public class RegistrarceController implements Initializable {
         txtContrasena.setDisable(estado);
         txtNumeroTelefono.setDisable(estado);
         txtFechaNacimiento.setDisable(estado);
+        cmbTipoDeCuenta.setDisable(estado);  // habilitar/deshabilitar combo
     }
 
     private void habilitarBotones(boolean estado) {
@@ -176,23 +191,24 @@ public class RegistrarceController implements Initializable {
         try {
             CallableStatement cs;
             if (tipoAccion == Accion.AGREGAR) {
-                cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_agregar_usuario(?, ?, ?, ?, ?, ?);");
+                cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_agregar_usuario(?, ?, ?, ?, ?, ?, ?);");
                 cs.setString(1, modeloUsuario.getUsername());
                 cs.setString(2, modeloUsuario.getNombreCompleto());
                 cs.setString(3, modeloUsuario.getCorreoElectronico());
                 cs.setString(4, modeloUsuario.getPassword());
                 cs.setString(5, modeloUsuario.getNumeroTelefono());
                 cs.setDate(6, java.sql.Date.valueOf(modeloUsuario.getFechaNacimiento()));
-
+                cs.setString(7, modeloUsuario.getTipoDeCuenta());  // nuevo parámetro
             } else {
-                cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_actualizar_usuario(?, ?, ?, ?, ?, ?, ?);");
+                cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_actualizar_usuario(?, ?, ?, ?, ?, ?, ?, ?);");
                 cs.setInt(1, modeloUsuario.getIdUsuario());
-                cs.setString(2, modeloUsuario.getNombreCompleto());
-                cs.setString(3, modeloUsuario.getCorreoElectronico());
-                cs.setString(4, modeloUsuario.getPassword());
-                cs.setString(5, modeloUsuario.getNumeroTelefono());
-                cs.setString(6, modeloUsuario.getUsername());
+                cs.setString(2, modeloUsuario.getUsername());
+                cs.setString(3, modeloUsuario.getNombreCompleto());
+                cs.setString(4, modeloUsuario.getCorreoElectronico());
+                cs.setString(5, modeloUsuario.getPassword());
+                cs.setString(6, modeloUsuario.getNumeroTelefono());
                 cs.setDate(7, java.sql.Date.valueOf(modeloUsuario.getFechaNacimiento()));
+                cs.setString(8, modeloUsuario.getTipoDeCuenta());  // nuevo parámetro
             }
             cs.execute();
             cargarUsuarios();
@@ -214,62 +230,67 @@ public class RegistrarceController implements Initializable {
 
     @FXML
     private void btnRegresarAction(ActionEvent a) {
-        if(a.getSource()==btnRegresar){
+        if (a.getSource() == btnRegresar) {
             principal.Inicio();
         }
     }
     
     @FXML
-private void buscarUsuario() {
-    String filtro = cmbFiltroBusqueda.getValue();
-    String texto = txtBuscar.getText().trim().toLowerCase();
-    
-    if (filtro == null || texto.isEmpty() || filtro.equals("Buscar por:")) {
-        tablaUsuarios.setItems(listaUsuarios); // Muestra todo si está vacío
-        return;
-    }
+    private void buscarUsuario() {
+        String filtro = cmbFiltroBusqueda.getValue();
+        String texto = txtBuscar.getText().trim().toLowerCase();
 
-    ArrayList<Registro> resultados = new ArrayList<>();
-    for (Registro user : listaUsuarios) {
-        switch (filtro) {
-            case "ID":
-                try {
-                    int idBuscado = Integer.parseInt(texto);
-                    if (user.getIdUsuario() == idBuscado) {
+        if (filtro == null || texto.isEmpty() || filtro.equals("Buscar por:")) {
+            tablaUsuarios.setItems(listaUsuarios); // Muestra todo si está vacío
+            return;
+        }
+
+        ArrayList<Registro> resultados = new ArrayList<>();
+        for (Registro user : listaUsuarios) {
+            switch (filtro) {
+                case "ID":
+                    try {
+                        int idBuscado = Integer.parseInt(texto);
+                        if (user.getIdUsuario() == idBuscado) {
+                            resultados.add(user);
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("ID inválido");
+                    }
+                    break;
+                case "Username":
+                    if (user.getUsername().toLowerCase().contains(texto)) {
                         resultados.add(user);
                     }
-                } catch (NumberFormatException e) {
-                    System.out.println("ID inválido");
-                }
-                break;
-            case "Username":
-                if (user.getUsername().toLowerCase().contains(texto)) {
-                    resultados.add(user);
-                }
-                break;
-            case "Nombre":
-                if (user.getNombreCompleto().toLowerCase().contains(texto)) {
-                    resultados.add(user);
-                }
-                break;
-            case "Correo":
-                if (user.getCorreoElectronico().toLowerCase().contains(texto)) {
-                    resultados.add(user);
-                }
-                break;
-            case "Teléfono":
-                if (user.getNumeroTelefono().toLowerCase().contains(texto)) {
-                    resultados.add(user);
-                }
-                break;
+                    break;
+                case "Nombre":
+                    if (user.getNombreCompleto().toLowerCase().contains(texto)) {
+                        resultados.add(user);
+                    }
+                    break;
+                case "Correo":
+                    if (user.getCorreoElectronico().toLowerCase().contains(texto)) {
+                        resultados.add(user);
+                    }
+                    break;
+                case "Teléfono":
+                    if (user.getNumeroTelefono().toLowerCase().contains(texto)) {
+                        resultados.add(user);
+                    }
+                    break;
+                case "Tipo de Cuenta": // NUEVO FILTRO PARA tipoDeCuenta
+                    if (user.getTipoDeCuenta().toLowerCase().contains(texto)) {
+                        resultados.add(user);
+                    }
+                    break;
+            }
+        }
+
+        tablaUsuarios.setItems(FXCollections.observableArrayList(resultados));
+        if (!resultados.isEmpty()) {
+            tablaUsuarios.getSelectionModel().selectFirst();
+            cargarTextFields();
         }
     }
-
-    tablaUsuarios.setItems(FXCollections.observableArrayList(resultados));
-    if (!resultados.isEmpty()) {
-        tablaUsuarios.getSelectionModel().selectFirst();
-        cargarTextFields();
-    }
-}
 
 }

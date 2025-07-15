@@ -15,7 +15,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@registrosusuariosview.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.RegistrarceController">
 
     <children>
@@ -44,6 +43,7 @@
                     <TableColumn fx:id="colpassword" prefWidth="120.0" text="Contraseña" />
                     <TableColumn fx:id="colNumeroTelefono" prefWidth="120.0" text="Teléfono" />
                     <TableColumn fx:id="colFechaNacimiento" prefWidth="130.0" text="Fecha Nacimiento" />
+                    <TableColumn fx:id="colTipoDeCuenta" prefWidth="140.0" text="Tipo de Cuenta" />
                 </columns>
             </TableView>
 
@@ -73,6 +73,7 @@
                     <RowConstraints />
                     <RowConstraints />
                     <RowConstraints />
+                    <RowConstraints /> <!-- Fila nueva para tipoCuenta -->
                 </rowConstraints>
 
                 <Label text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
@@ -95,6 +96,10 @@
 
                 <Label text="Fecha Nacimiento:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
                 <DatePicker fx:id="txtFechaNacimiento" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                <!-- Nuevo ComboBox para tipoCuenta -->
+                <Label text="Tipo de Cuenta:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                <ComboBox fx:id="cmbTipoDeCuenta" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="7" prefWidth="200" />
             </GridPane>
         </VBox>
 

@@ -48,35 +48,42 @@ public class LoginController {
     }
 
     @FXML
-    private void loginAction() {
-        String usuario = txtUsuario.getText().trim();
-        String password = txtPassword.getText().trim();
+        private void loginAction() {
+            String usuario = txtUsuario.getText().trim();
+            String password = txtPassword.getText().trim();
 
-        if (usuario.isEmpty() || password.isEmpty()) {
-            lblMensaje.setText("Ingrese usuario y contraseña");
-            return;
-        }
-
-        try {
-            Connection conn = Conexion.getInstancia().getConexion();
-            String sql = "SELECT * FROM usuarios WHERE username = ? AND password = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, usuario);
-            ps.setString(2, password);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                lblMensaje.setText("¡Login exitoso!");
-                principal.Inicio();
-                // Aquí abres la ventana principal o haces otra acción
-            } else {
-                lblMensaje.setText("Usuario o contraseña incorrectos");
+            if (usuario.isEmpty() || password.isEmpty()) {
+                lblMensaje.setText("Ingrese usuario y contraseña");
+                return;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            lblMensaje.setText("Error en la conexión");
+
+            try {
+                Connection conn = Conexion.getInstancia().getConexion();
+                String sql = "SELECT tipoDeCuenta FROM usuarios WHERE username = ? AND password = ?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setString(1, usuario);
+                ps.setString(2, password);
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    String tipoCuenta = rs.getString("tipoDeCuenta");
+                    lblMensaje.setText("¡Login exitoso!");
+
+                    // Redirigir según tipo de cuenta
+                    if (tipoCuenta.equals("Administrador")) {
+                        principal.Inicio(); // o principal.mostrarVistaAdministrador();
+                    } else if (tipoCuenta.equals("Usuario")) {
+                        principal.ClienteCompra();// Define este método para abrir la vista del usuario
+                    }
+                } else {
+                    lblMensaje.setText("Usuario o contraseña incorrectos");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                lblMensaje.setText("Error en la conexión");
+            }
         }
-    }
+
 
     @FXML
     private void Regresar(ActionEvent evento){

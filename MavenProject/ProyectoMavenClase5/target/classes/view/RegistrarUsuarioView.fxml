@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -42,8 +43,20 @@
         <TextField fx:id="txtNumeroTelefono" maxWidth="250" promptText="Número de teléfono" />
         <DatePicker fx:id="txtFechaNacimiento" maxWidth="250" promptText="Fecha de nacimiento" />
 
+        <!-- Nuevo ComboBox para Tipo de Cuenta -->
+        <ComboBox fx:id="cbmTipoDeCuenta" maxWidth="250" promptText="Tipo de cuenta" />
+
         <HBox alignment="CENTER" spacing="20">
             <Button fx:id="btnRegistrar" onAction="#btnRegistrarAction" text="Registrar" />
         </HBox>
+
+        <!--
+        Si tienes una tabla para mostrar usuarios aquí, agrega la nueva columna:
+        <TableView fx:id="tablaUsuarios">
+            ...
+            <TableColumn text="Tipo de Cuenta" fx:id="colTipoCuenta" />
+            ...
+        </TableView>
+        -->
     </VBox>
 </AnchorPane>
