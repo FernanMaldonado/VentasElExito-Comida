@@ -137,7 +137,7 @@ public class Main extends Application {
         if (rp != null) {
             rp.setPrincipal(this);
         } else {
-            System.err.println("No se pudo cargar la vista de Registros de Productos o su controlador es nulo.");
+            System.err.println("No se pudo cargar la vista de Registros de Productos o su controlador es nulo. ");
         }
     }
     
