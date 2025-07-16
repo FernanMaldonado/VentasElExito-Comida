@@ -1,6 +1,6 @@
 # VentasElExito-Comida
 
-Este proyecto es un sistema de gestión para un restaurante de comida rápida llamado **"El Éxito"**, que permite administrar productos, empleados, clientes, pedidos, pagos y más. Incluye el diseño de una base de datos relacional en MySQL con procedimientos almacenados, consultas y triggers para automatizar acciones comunes dentro del negocio.
+Este proyecto es un sistema de gestión para un restaurante de comida rápida llamado **"El Éxito"**, que permite administrar productos, empleados, clientes, pedidos, pagos etc. Este incluye una base de datos relacional en MySQL con procedimientos almacenados, consultas y triggers para hacer mas faciles algunas acciones del negocio.
 
 ## Contenido del Repositorio
 
