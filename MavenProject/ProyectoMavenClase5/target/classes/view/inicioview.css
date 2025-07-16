@@ -72,3 +72,7 @@
     -fx-background-radius: 100;
     -fx-cursor: hand;
 }
+
+  .AnchorPane {
+    -fx-background-color:#ff712b;
+}

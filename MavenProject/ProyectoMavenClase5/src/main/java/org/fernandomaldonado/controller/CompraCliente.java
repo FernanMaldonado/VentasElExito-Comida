@@ -1,12 +1,9 @@
 package org.fernandomaldonado.controller;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import org.fernandomaldonado.conexion.Conexion;
-import org.fernandomaldonado.model.Compras;
 import org.fernandomaldonado.model.Registro;
 import org.fernandomaldonado.model.RegistrosProductos;
 import org.fernandomaldonado.system.Main;
@@ -15,13 +12,20 @@ import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class CompraCliente implements Initializable {
 
     @FXML private TextField txtIdCompra;
+
     @FXML private DatePicker dpFechaCompra;
-    @FXML private ComboBox<Registro> cmbUsuarios;
+
+    // Ya no hay ComboBox ni TextField de usuario
+
     @FXML private ComboBox<RegistrosProductos> cmbProductos;
     @FXML private TextField txtCantidad;
 
@@ -29,51 +33,37 @@ public class CompraCliente implements Initializable {
     @FXML private Button btnCancelar;
     @FXML private Button btnRegresar;
 
-    private ObservableList<Registro> listaUsuarios;
     private ObservableList<RegistrosProductos> listaProductos;
     private Main principal;
 
+    // Usuario logueado (debe ser seteado desde Main o clase que maneja sesión)
+    private Registro usuarioLogueado;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        cargarUsuarios();
         cargarProductos();
         limpiarCampos();
+
+        // Fecha fija a la local y bloqueada
+        dpFechaCompra.setValue(LocalDate.now());
+        dpFechaCompra.setDisable(true);
     }
 
     public void setPrincipal(Main principal) {
         this.principal = principal;
     }
 
-    private void cargarUsuarios() {
-        listaUsuarios = FXCollections.observableArrayList();
-        try {
-            CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_listar_usuarios();");
-            ResultSet rs = cs.executeQuery();
-            while (rs.next()) {
-                Registro u = new Registro(
-                        rs.getInt("idUsuario"),
-                        rs.getString("username"),
-                        rs.getString("nombreCompleto"),
-                        rs.getString("correoElectronico"),
-                        rs.getString("password"),
-                        rs.getString("numeroTelefono"),
-                        rs.getDate("fechaNacimiento") != null ? rs.getDate("fechaNacimiento").toLocalDate() : null,
-                        rs.getString("tipoDeCuenta")
-                );
-                listaUsuarios.add(u);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        cmbUsuarios.setItems(listaUsuarios);
-        cmbUsuarios.setPromptText("Selecciona un usuario");
+    // Este método debe llamarse desde Main tras login
+    public void setUsuarioLogueado(Registro usuario) {
+        this.usuarioLogueado = usuario;
     }
 
     private void cargarProductos() {
         listaProductos = FXCollections.observableArrayList();
-        try {
+        try (
             CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_listarProductos();");
             ResultSet rs = cs.executeQuery();
+        ) {
             while (rs.next()) {
                 RegistrosProductos p = new RegistrosProductos(
                         rs.getInt("idProducto"),
@@ -94,20 +84,22 @@ public class CompraCliente implements Initializable {
 
     private void limpiarCampos() {
         txtIdCompra.clear();
-        dpFechaCompra.setValue(null);
-        cmbUsuarios.getSelectionModel().clearSelection();
         cmbProductos.getSelectionModel().clearSelection();
         txtCantidad.clear();
     }
 
     @FXML
     private void btnGuardarAction() {
-        Registro usuarioSeleccionado = cmbUsuarios.getSelectionModel().getSelectedItem();
+        if (usuarioLogueado == null) {
+            mostrarAlerta("Error", "No hay usuario logueado.");
+            return;
+        }
+
         RegistrosProductos productoSeleccionado = cmbProductos.getSelectionModel().getSelectedItem();
         LocalDate fecha = dpFechaCompra.getValue();
 
-        if (usuarioSeleccionado == null || fecha == null || productoSeleccionado == null || txtCantidad.getText().isEmpty()) {
-            mostrarAlerta("Campos requeridos", "Debes completar todos los campos.");
+        if (productoSeleccionado == null || txtCantidad.getText().isEmpty()) {
+            mostrarAlerta("Campos requeridos", "Debes seleccionar un producto y escribir cantidad.");
             return;
         }
 
@@ -120,47 +112,103 @@ public class CompraCliente implements Initializable {
             return;
         }
 
-        try {
-            Connection conn = Conexion.getInstancia().getConexion();
+        int stockDisponible = productoSeleccionado.getStock();
 
-            // 1. Registrar la compra (usuario + fecha + total 0.0)
-            CallableStatement cs = conn.prepareCall("CALL sp_agregar_compra(?, ?, ?);");
-            cs.setInt(1, usuarioSeleccionado.getIdUsuario());
-            cs.setDate(2, Date.valueOf(fecha));
-            cs.setDouble(3, 0.0);
-            cs.execute();
-
-            // 2. Obtener el ID de la última compra (opcionalmente podrías retornar desde el SP)
-            CallableStatement csId = conn.prepareCall("SELECT MAX(idCompra) AS id FROM compras WHERE idUsuario = ?");
-            csId.setInt(1, usuarioSeleccionado.getIdUsuario());
-            ResultSet rs = csId.executeQuery();
-            int idCompra = 0;
-            if (rs.next()) {
-                idCompra = rs.getInt("id");
-            }
-
-            // 3. Insertar detalle de compra
-            CallableStatement csDetalle = conn.prepareCall("CALL sp_agregar_detalle_compra(?, ?, ?);");
-            csDetalle.setInt(1, idCompra);
-            csDetalle.setInt(2, productoSeleccionado.getIdProducto());
-            csDetalle.setInt(3, cantidad);
-            csDetalle.execute();
-
-            // 4. Obtener el total actualizado de la compra
-            CallableStatement csTotal = conn.prepareCall("SELECT total FROM compras WHERE idCompra = ?");
-            csTotal.setInt(1, idCompra);
-            ResultSet rsTotal = csTotal.executeQuery();
-            double total = 0.0;
-            if (rsTotal.next()) {
-                total = rsTotal.getDouble("total");
-            }
-
-            mostrarAlerta("Compra registrada", "La compra fue registrada exitosamente.\nTotal: Q" + total);
-            limpiarCampos();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            mostrarAlerta("Error", "Ocurrió un error al registrar la compra.");
+        if (stockDisponible == 0) {
+            mostrarAlerta("Producto agotado", "Este producto no está disponible actualmente.");
+            return;
         }
+
+        if (cantidad > stockDisponible) {
+            mostrarAlerta("Stock insuficiente", "Solo hay disponibles " + stockDisponible + " unidades del producto.");
+            return;
+        }
+
+        Connection conn = null;
+        CallableStatement csCompra = null;
+        CallableStatement csDetalle = null;
+        ResultSet rsGeneratedKeys = null;
+        CallableStatement csTotal = null;
+        ResultSet rsTotal = null;
+
+        try {
+            conn = Conexion.getInstancia().getConexion();
+
+            // Registrar la compra con total 0
+            csCompra = conn.prepareCall("CALL sp_agregar_compra(?, ?, ?);", ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            csCompra.setInt(1, usuarioLogueado.getIdUsuario());
+            csCompra.setDate(2, Date.valueOf(fecha));
+            csCompra.setDouble(3, 0.0);
+            csCompra.execute();
+
+            // Obtener idCompra recién insertado
+            String queryIdCompra = "SELECT MAX(idCompra) AS id FROM compras WHERE idUsuario = ?";
+            try (PreparedStatement psIdCompra = conn.prepareStatement(queryIdCompra)) {
+                psIdCompra.setInt(1, usuarioLogueado.getIdUsuario());
+                rsGeneratedKeys = psIdCompra.executeQuery();
+                if (rsGeneratedKeys.next()) {
+                    int idCompra = rsGeneratedKeys.getInt("id");
+
+                    // Insertar detalle de compra
+                    csDetalle = conn.prepareCall("CALL sp_agregar_detalle_compra(?, ?, ?);");
+                    csDetalle.setInt(1, idCompra);
+                    csDetalle.setInt(2, productoSeleccionado.getIdProducto());
+                    csDetalle.setInt(3, cantidad);
+                    csDetalle.execute();
+
+                    // Obtener total actualizado
+                    csTotal = conn.prepareCall("SELECT total FROM compras WHERE idCompra = ?");
+                    csTotal.setInt(1, idCompra);
+                    rsTotal = csTotal.executeQuery();
+                    double total = 0.0;
+                    if (rsTotal.next()) {
+                        total = rsTotal.getDouble("total");
+                    }
+
+                    mostrarAlertaConImagen("Compra registrada",
+                            "La compra fue registrada exitosamente.\nTotal: Q" + total,
+                            "/img/CompraHecha.gif");
+
+                    limpiarCampos();
+                } else {
+                    mostrarAlerta("Error", "No se pudo obtener el ID de la compra recién insertada.");
+                }
+            }
+        } catch (SQLException e) {
+            String msg = e.getMessage();
+            if (msg.contains("Producto agotado") || msg.contains("Stock insuficiente")) {
+                mostrarAlerta("Error de stock", msg);
+            } else {
+                e.printStackTrace();
+                mostrarAlerta("Error", "Ocurrió un error al registrar la compra.");
+            }
+        } finally {
+            try { if (rsGeneratedKeys != null) rsGeneratedKeys.close(); } catch (Exception ignored) {}
+            try { if (csCompra != null) csCompra.close(); } catch (Exception ignored) {}
+            try { if (csDetalle != null) csDetalle.close(); } catch (Exception ignored) {}
+            try { if (rsTotal != null) rsTotal.close(); } catch (Exception ignored) {}
+            try { if (csTotal != null) csTotal.close(); } catch (Exception ignored) {}
+        }
+    }
+
+    @FXML
+    private void mostrarAlertaConImagen(String titulo, String mensaje, String rutaImagen) {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+
+        Label lblMensaje = new Label(mensaje);
+
+        javafx.scene.image.Image imagen = new javafx.scene.image.Image(getClass().getResourceAsStream(rutaImagen));
+        javafx.scene.image.ImageView imageView = new javafx.scene.image.ImageView(imagen);
+        imageView.setFitWidth(150);
+        imageView.setPreserveRatio(true);
+
+        VBox contenido = new VBox(10);
+        contenido.getChildren().addAll(lblMensaje, imageView);
+
+        alerta.getDialogPane().setContent(contenido);
+        alerta.showAndWait();
     }
 
     @FXML
@@ -170,10 +218,16 @@ public class CompraCliente implements Initializable {
 
     @FXML
     private void btnRegresarAction(ActionEvent e) {
-        if (e.getSource() == btnRegresar && principal != null) {
-            principal.Inicio();
-        }
+    if (e.getSource() == btnRegresar && principal != null) {
+        // Cerrar ventana actual
+        Stage stageActual = (Stage) btnRegresar.getScene().getWindow();
+        stageActual.close();
+
+        // Abrir ventana nueva (por ejemplo, Inicio)
+        principal.PantallaInicio();
     }
+}
+
 
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alerta = new Alert(Alert.AlertType.INFORMATION);
@@ -182,4 +236,5 @@ public class CompraCliente implements Initializable {
         alerta.setContentText(mensaje);
         alerta.showAndWait();
     }
+
 }

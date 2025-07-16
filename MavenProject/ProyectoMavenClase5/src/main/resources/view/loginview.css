@@ -1,7 +1,54 @@
 /*
- * Empty Stylesheet file.
- */
 
+* Empty Stylesheet file.
+
+*/
+ 
 .mainFxmlClass {
+
     -fx-background-color:#ffffff;
+
 }
+ 
+.Prueba {
+
+    -fx-border-radius: 15px;  /* Redondear las esquinas */
+
+    -fx-border-color: #4CAF50;  /* Color del borde */
+
+    -fx-border-width: 2px;  /* Grosor del borde */
+
+    -fx-background-insets: 0;  /* Evitar que el fondo se solape con el borde */
+
+    -fx-padding: 10px;  /* Espaciado interno */
+
+    -fx-background-color: white; /* Asegurarse de que el fondo del TextField sea blanco */
+
+}
+ 
+.Prueba:focused {
+
+    -fx-border-color: #FF5722;  /* Color del borde cuando el TextField está enfocado */
+
+    -fx-background-color: #f1f1f1;  /* Fondo ligeramente gris cuando está enfocado */
+
+}
+ 
+ 
+  .AnchorPane {
+    -fx-background-color:#ff712b;
+}
+.boton {
+    -fx-background-color: #a4c701; /* azul medio */
+    -fx-text-fill: #4c190f;          /* texto blanco */
+    -fx-font-size: 14px;
+    -fx-padding: 8px 20px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 3, 0.5, 0, 2);
+    -fx-transition: all 0.3s ease;
+}
+
+.boton:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0.7, 0, 3);
+} 

@@ -17,11 +17,13 @@ import org.fernandomaldonado.controller.LoginController;
 import org.fernandomaldonado.controller.PantallaInicioController;
 import org.fernandomaldonado.controller.RegistrarUsuarioController;
 import org.fernandomaldonado.controller.RegistrarceController;
+import org.fernandomaldonado.model.Registro;
 
 public class Main extends Application {
     // CAMBIO AQUI: La ruta debe ser solo "/view/" porque tus FXML están directamente en src/main/resources/view/
     private static final String URL_VIEW = "/view/";
     private Stage escenarioPrincipal;
+    public static Registro usuarioLogueado;  
 
     public static void main(String[] args) {
         launch(args);
@@ -149,4 +151,27 @@ public class Main extends Application {
             System.err.println("No se pudo cargar la vista de Registros de Productos o su controlador es nulo .");
         }
     }
+    
+    public void mostrarCompraClienteConUsuario(Registro usuarioLogueado) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(URL_VIEW+"CompraCliente.fxml"));
+        Parent root = loader.load();
+
+        CompraCliente controller = loader.getController();
+        controller.setPrincipal(this);
+        controller.setUsuarioLogueado(usuarioLogueado);
+
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Registrar Compra");
+        stage.show();
+
+        // Opcional: cerrar la ventana actual de login si es necesario
+        // ...
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
 }

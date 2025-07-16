@@ -13,21 +13,6 @@
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" styleClass="mainFxmlClass" stylesheets="@inicioview.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.InicioController">
    <children>
-      <StackPane layoutX="-2.0" layoutY="81.0" prefHeight="10.0" prefWidth="806.0" styleClass="BARRA">
-         <children>
-            <Rectangle fx:id="headerRectangle" arcHeight="5.0" arcWidth="5.0" fill="#0084ff" height="10.0" stroke="BLACK" strokeType="INSIDE" />
-         </children>
-      </StackPane>
-      <ImageView fitHeight="60.0" fitWidth="200.0" layoutX="18.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../img/Logo.png" />
-         </image>
-      </ImageView>
-      <Label layoutX="85.0" layoutY="24.0" prefHeight="44.0" prefWidth="310.0" styleClass="TituloPedidos" text="Ventas El Exito Comida" textFill="#ff0052">
-         <font>
-            <Font size="28.0" />
-         </font>
-      </Label>
       <ImageView fx:id="Imagern" fitHeight="90.0" fitWidth="227.0" layoutX="51.0" layoutY="150.0" pickOnBounds="true" preserveRatio="true" styleClass="Borde">
          <image>
             <Image url="@../img/FondoDeComida.jpg" />
@@ -58,17 +43,33 @@
             <Image url="@../img/Imagen1.png" />
          </image>
       </ImageView>
-      <MenuButton layoutX="668.0" layoutY="34.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="108.0" styleClass="InicioButton" text=" Mi Perfil 👤">
-        <items>
-          <MenuItem fx:id="btnCerrar" mnemonicParsing="false" onAction="#clickInicio" text="Cerrar Sesion" />
-          <MenuItem mnemonicParsing="false" text="Ayuda En Linea" />
-        </items>
-      </MenuButton>
       <ImageView fitHeight="165.0" fitWidth="226.0" layoutX="320.0" layoutY="344.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/Carreta.png" />
          </image>
       </ImageView>
       <Button fx:id="btnDetalleCompras" layoutX="289.0" layoutY="451.0" mnemonicParsing="false" onAction="#clickInicio" prefHeight="89.0" prefWidth="242.0" styleClass="boton" text="Detalle Compras" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff712b" height="105.0" layoutX="-2.0" layoutY="-5.0" stroke="BLACK" strokeType="INSIDE" styleClass="AnchorPane" width="806.0" />
+      <StackPane layoutX="-3.0" layoutY="91.0" prefHeight="10.0" prefWidth="806.0" styleClass="BARRA">
+         <children>
+            <Rectangle fx:id="headerRectangle" arcHeight="5.0" arcWidth="5.0" fill="#0084ff" height="10.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </StackPane>
+      <ImageView fitHeight="60.0" fitWidth="200.0" layoutX="26.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/Logo.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="95.0" layoutY="34.0" prefHeight="44.0" prefWidth="310.0" styleClass="TituloPedidos" text="Ventas El Exito Comida" textFill="#ff0052">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <MenuButton layoutX="676.0" layoutY="36.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="108.0" styleClass="InicioButton" text=" Mi Perfil 👤">
+         <items>
+            <MenuItem fx:id="btnCerrar" mnemonicParsing="false" onAction="#clickInicio" text="Cerrar Sesion" />
+            <MenuItem mnemonicParsing="false" text="Ayuda En Linea" />
+         </items>
+      </MenuButton>
    </children>
 </AnchorPane>

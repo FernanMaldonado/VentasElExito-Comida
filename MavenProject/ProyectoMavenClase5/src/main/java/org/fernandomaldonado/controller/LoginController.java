@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.event.ActionEvent;
+import org.fernandomaldonado.model.Registro;
 import org.fernandomaldonado.system.Main;
 
 public class LoginController {
@@ -48,41 +49,53 @@ public class LoginController {
     }
 
     @FXML
-        private void loginAction() {
-            String usuario = txtUsuario.getText().trim();
-            String password = txtPassword.getText().trim();
+private void loginAction() {
+    String usuario = txtUsuario.getText().trim();
+    String password = txtPassword.getText().trim();
 
-            if (usuario.isEmpty() || password.isEmpty()) {
-                lblMensaje.setText("Ingrese usuario y contraseña");
-                return;
+    if (usuario.isEmpty() || password.isEmpty()) {
+        lblMensaje.setText("Ingrese usuario y contraseña");
+        return;
+    }
+
+    try {
+        Connection conn = Conexion.getInstancia().getConexion();
+        String sql = "SELECT * FROM usuarios WHERE username = ? AND password = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, usuario);
+        ps.setString(2, password);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            // Creamos el objeto usuario con todos sus datos
+            Registro usuarioLogueado = new Registro(
+                rs.getInt("idUsuario"),
+                rs.getString("username"),
+                rs.getString("nombreCompleto"),
+                rs.getString("correoElectronico"),
+                rs.getString("password"),
+                rs.getString("numeroTelefono"),
+                rs.getDate("fechaNacimiento") != null ? rs.getDate("fechaNacimiento").toLocalDate() : null,
+                rs.getString("tipoDeCuenta")
+            );
+
+            lblMensaje.setText("¡Login exitoso!");
+
+            if (usuarioLogueado.getTipoDeCuenta().equals("Administrador")) {
+                principal.Inicio();
+            } else if (usuarioLogueado.getTipoDeCuenta().equals("Usuario")) {
+                // Abrir la vista de compra PASANDO el usuario logueado
+                principal.mostrarCompraClienteConUsuario(usuarioLogueado);
             }
-
-            try {
-                Connection conn = Conexion.getInstancia().getConexion();
-                String sql = "SELECT tipoDeCuenta FROM usuarios WHERE username = ? AND password = ?";
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setString(1, usuario);
-                ps.setString(2, password);
-                ResultSet rs = ps.executeQuery();
-
-                if (rs.next()) {
-                    String tipoCuenta = rs.getString("tipoDeCuenta");
-                    lblMensaje.setText("¡Login exitoso!");
-
-                    // Redirigir según tipo de cuenta
-                    if (tipoCuenta.equals("Administrador")) {
-                        principal.Inicio(); // o principal.mostrarVistaAdministrador();
-                    } else if (tipoCuenta.equals("Usuario")) {
-                        principal.ClienteCompra();// Define este método para abrir la vista del usuario
-                    }
-                } else {
-                    lblMensaje.setText("Usuario o contraseña incorrectos");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                lblMensaje.setText("Error en la conexión");
-            }
+        } else {
+            lblMensaje.setText("Usuario o contraseña incorrectos");
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+        lblMensaje.setText("Error en la conexión");
+    }
+}
+
 
 
     @FXML

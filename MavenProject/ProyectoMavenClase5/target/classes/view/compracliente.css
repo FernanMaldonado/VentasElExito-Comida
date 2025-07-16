@@ -5,3 +5,29 @@
 .mainFxmlClass {
 
 }
+
+.AnchorPane {
+    -fx-background-color:#ff712b;
+}
+.boton {
+    -fx-background-color: #a4c701; /* azul medio */
+    -fx-text-fill: #4c190f;          /* texto blanco */
+    -fx-font-size: 14px;
+    -fx-padding: 8px 20px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 3, 0.5, 0, 2);
+    -fx-transition: all 0.3s ease;
+}
+
+.boton:hover {
+    -fx-scaley:1.5;
+    -fx-scalex:1.5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0.7, 0, 3);
+}    
+
+.TituloPedidos {
+    -fx-font-family: "Circular", "Arial", sans-serif;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F42536;
+}

@@ -5,3 +5,120 @@
 .mainFxmlClass {
 
 }
+
+/*
+
+* Empty Stylesheet file.
+
+*/
+ 
+.mainFxmlClass {
+ 
+}
+ 
+/* Fondo general */
+
+.root {
+
+    -fx-background-color: #f2f2f2;
+
+}
+ 
+ 
+/* Título grande centrado */
+
+.titulo {
+
+    -fx-font-family: "Arial Black";
+
+    -fx-font-size: 40px;
+
+    -fx-text-fill: #2c3e50;
+
+}
+ 
+/* Estilo para la tabla */
+
+.table-view {
+
+    -fx-background-color: #f7f7f7;
+
+    -fx-border-color: #cccccc;
+
+    -fx-border-width: 1;
+
+}
+ 
+/* Encabezado de las columnas */
+
+.table-view .column-header-background {
+
+    -fx-background-color: #d5bdaf; /* Color del encabezado */
+
+}
+ 
+/* Filas impares */
+
+.table-view .table-row-cell:odd {
+
+    -fx-background-color: #e3d5ca; /* Color para filas impares */
+
+}
+ 
+/* Filas pares */
+
+.table-view .table-row-cell:even {
+
+    -fx-background-color: #d6ccc2; /* Color para filas pares */
+
+}
+ 
+/* Estilo cuando el mouse está sobre una fila */
+
+.table-view .table-row-cell:hover {
+
+    -fx-background-color: #eae6d8; /* Color al pasar el mouse sobre una fila */
+
+}
+ 
+/* Estilo para las celdas de la tabla */
+
+.table-view .table-cell {
+
+    -fx-text-fill: #333333; /* Color de texto */
+
+    -fx-padding: 5px; /* Espaciado en las celdas */
+
+}
+ 
+/* Estilo para las celdas seleccionadas */
+
+.table-view .table-row-cell:selected {
+
+    -fx-background-color: #b9b79f; /* Color de fondo para las filas seleccionadas */
+
+    -fx-text-fill: white; /* Color de texto para las filas seleccionadas */
+
+}
+ 
+ 
+.AnchorPane {
+    -fx-background-color:#ff712b;
+}
+.boton {
+    -fx-background-color: #a4c701; /* azul medio */
+    -fx-text-fill: #4c190f;          /* texto blanco */
+    -fx-font-size: 14px;
+    -fx-padding: 8px 20px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 3, 0.5, 0, 2);
+    -fx-transition: all 0.3s ease;
+}
+
+.boton:hover {
+    -fx-scaley:1.5;
+    -fx-scalex:1.5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0.7, 0, 3);
+} 
+

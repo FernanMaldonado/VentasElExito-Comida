@@ -77,9 +77,10 @@ public class DetalleComprasController implements Initializable {
 
     private void cargarCompras() {
         listaCompras = FXCollections.observableArrayList();
-        try {
-            CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_listar_compras();");
+        try (
+            CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_listar_compras();"); 
             ResultSet rs = cs.executeQuery();
+        ) {
             while (rs.next()) {
                 Compras c = new Compras(
                         rs.getInt("idCompra"),
@@ -98,9 +99,10 @@ public class DetalleComprasController implements Initializable {
 
     private void cargarProductos() {
         listaProductos = FXCollections.observableArrayList();
-        try {
-            CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_listarProductos();");
+        try (
+            CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_listarProductos();"); 
             ResultSet rs = cs.executeQuery();
+        ) {
             while (rs.next()) {
                 RegistrosProductos p = new RegistrosProductos(
                         rs.getInt("idProducto"),
@@ -130,9 +132,10 @@ public class DetalleComprasController implements Initializable {
 
     private ArrayList<DetalleCompras> listarDetalleCompras() {
         ArrayList<DetalleCompras> detalles = new ArrayList<>();
-        try {
+        try (
             CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_listar_detalles();");
             ResultSet rs = cs.executeQuery();
+        ) {
             while (rs.next()) {
                 detalles.add(new DetalleCompras(
                         rs.getInt("idDetalle"),
@@ -155,15 +158,19 @@ public class DetalleComprasController implements Initializable {
         RegistrosProductos productoSeleccionado = cmbProductos.getSelectionModel().getSelectedItem();
 
         if (compraSeleccionada == null || productoSeleccionado == null) {
-            System.out.println("Debe seleccionar una compra y un producto.");
+            mostrarAlerta("Error", "Debe seleccionar una compra y un producto.");
             return null;
         }
 
         int cantidad;
         try {
             cantidad = Integer.parseInt(txtCantidad.getText());
+            if (cantidad <= 0) {
+                mostrarAlerta("Error", "La cantidad debe ser un número entero positivo.");
+                return null;
+            }
         } catch (NumberFormatException e) {
-            System.out.println("Cantidad no válida.");
+            mostrarAlerta("Error", "Cantidad no válida.");
             return null;
         }
 
@@ -230,6 +237,10 @@ public class DetalleComprasController implements Initializable {
 
     @FXML
     private void btnEditarAction() {
+        if (tablaDetalleCompras.getSelectionModel().getSelectedItem() == null) {
+            mostrarAlerta("Atención", "Debe seleccionar un detalle para editar.");
+            return;
+        }
         cambiarEstadoCampos(false);
         habilitarBotones(false);
         tipoAccion = Accion.EDITAR;
@@ -240,14 +251,23 @@ public class DetalleComprasController implements Initializable {
         modeloDetalleCompra = obtenerModelo();
         if (modeloDetalleCompra == null) return;
 
-        try {
-            CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_eliminar_detalle_compra(?);");
+        Alert confirmar = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmar.setTitle("Confirmar eliminación");
+        confirmar.setHeaderText(null);
+        confirmar.setContentText("¿Está seguro de eliminar este detalle de compra?");
+        if (confirmar.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) {
+            return;
+        }
+
+        try (CallableStatement cs = Conexion.getInstancia().getConexion().prepareCall("CALL sp_eliminar_detalle_compra(?);")) {
             cs.setInt(1, modeloDetalleCompra.getIdDetalle());
             cs.execute();
             cargarDetalleCompras();
             limpiarCampos();
+            mostrarAlerta("Éxito", "Detalle de compra eliminado correctamente.");
         } catch (SQLException ex) {
             ex.printStackTrace();
+            mostrarAlerta("Error", "No se pudo eliminar el detalle.");
         }
     }
 
@@ -255,6 +275,21 @@ public class DetalleComprasController implements Initializable {
     private void btnGuardarAction() {
         modeloDetalleCompra = obtenerModelo();
         if (modeloDetalleCompra == null) return;
+
+        RegistrosProductos productoSeleccionado = cmbProductos.getSelectionModel().getSelectedItem();
+        if (productoSeleccionado != null) {
+            int stockDisponible = productoSeleccionado.getStock();
+
+            if (stockDisponible == 0) {
+                mostrarAlerta("Producto agotado", "Este producto está agotado y no se puede agregar.");
+                return;
+            }
+
+            if (modeloDetalleCompra.getCantidad() > stockDisponible) {
+                mostrarAlerta("Stock insuficiente", "Solo hay disponibles " + stockDisponible + " unidades del producto.");
+                return;
+            }
+        }
 
         try {
             CallableStatement cs;
@@ -274,12 +309,17 @@ public class DetalleComprasController implements Initializable {
             }
 
             cs.execute();
+            cs.close();
+
             cargarDetalleCompras();
             cambiarEstadoCampos(true);
             habilitarBotones(true);
             tipoAccion = Accion.NINGUNA;
+
+            mostrarAlerta("Éxito", "Operación realizada correctamente.");
         } catch (SQLException ex) {
             ex.printStackTrace();
+            mostrarAlerta("Error", "Ocurrió un error al guardar el detalle.");
         }
     }
 
@@ -298,8 +338,8 @@ public class DetalleComprasController implements Initializable {
         }
     }
 
-    @FXML
-    private void buscarDetalle(String texto) {
+    // Método público para enlazar a un TextField (ej. para filtro de búsqueda)
+    public void buscarDetalle(String texto) {
         if (texto == null || texto.trim().isEmpty()) {
             tablaDetalleCompras.setItems(listaDetalleCompras);
             return;
@@ -320,5 +360,13 @@ public class DetalleComprasController implements Initializable {
             tablaDetalleCompras.getSelectionModel().selectFirst();
             cargarTextFields();
         }
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
     }
 }

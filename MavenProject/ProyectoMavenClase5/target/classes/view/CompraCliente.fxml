@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -11,41 +12,47 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="450.0" stylesheets="@estilos.css"
-    xmlns="http://javafx.com/javafx/24.0.1" 
-    xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="org.fernandomaldonado.controller.CompraCliente">
+<AnchorPane prefHeight="400.0" prefWidth="450.0" styleClass="AnchorPane" stylesheets="@compracliente.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.CompraCliente">
 
-    <VBox alignment="CENTER" spacing="15.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" maxWidth="400.0">
+    <VBox alignment="CENTER" layoutX="71.0" layoutY="28.0" maxWidth="411.0" prefHeight="350.0" prefWidth="340.0" spacing="15.0" AnchorPane.bottomAnchor="42.0" AnchorPane.leftAnchor="71.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="28.0">
         <padding>
-            <Insets top="20" bottom="20" left="20" right="20" />
+            <Insets bottom="20" left="20" right="20" top="20" />
         </padding>
+        <Group>
+            <children>
+                <ImageView fitHeight="60.0" fitWidth="200.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../img/Logo.png" />
+                    </image>
+                </ImageView>
+                <Label layoutX="67.0" layoutY="58.0" prefHeight="44.0" prefWidth="310.0" styleClass="TituloPedidos" text="Ventas El Exito Comida" textFill="#ff0052">
+                    <font>
+                        <Font size="28.0" />
+                    </font>
+                </Label>
 
-        <Button fx:id="btnRegresar" text="Regresar" onAction="#btnRegresarAction" />
+                <Button fx:id="btnRegresar" alignment="CENTER" contentDisplay="RIGHT" layoutX="284.0" layoutY="1.0" onAction="#btnRegresarAction" prefHeight="36.0" prefWidth="94.0" styleClass="boton" stylesheets="@compracliente.css" text="Cerrar X" />
+            </children>
+        </Group>
 
-        <ImageView fitHeight="60.0" fitWidth="300.0" preserveRatio="true">
-            <image>
-                <Image url="@../img/Logo2.png" />
-            </image>
-        </ImageView>
+        <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Registrar Compra" />
 
-        <Label text="Registrar Compra" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+        <TextField fx:id="txtIdCompra" editable="false" maxWidth="250.0" promptText="ID Compra (autogenerado)" />
 
-        <TextField fx:id="txtIdCompra" promptText="ID Compra (autogenerado)" maxWidth="250.0" editable="false" />
+        <ComboBox fx:id="cmbProductos" maxWidth="250.0" promptText="Selecciona un producto" />
 
-        <DatePicker fx:id="dpFechaCompra" promptText="Fecha de compra" maxWidth="250.0" />
+        <TextField fx:id="txtCantidad" maxWidth="250.0" promptText="Cantidad" />
 
-        <ComboBox fx:id="cmbUsuarios" promptText="Selecciona un usuario" maxWidth="250.0" />
-
-        <ComboBox fx:id="cmbProductos" promptText="Selecciona un producto" maxWidth="250.0" />
-
-        <TextField fx:id="txtCantidad" promptText="Cantidad" maxWidth="250.0" />
+        <HBox alignment="CENTER_LEFT" maxWidth="250" spacing="10">
+            <Label text="Fecha de compra:" />
+            <DatePicker fx:id="dpFechaCompra" disable="true" maxWidth="140" />
+        </HBox>
 
         <HBox alignment="CENTER" spacing="20">
-            <Button fx:id="btnGuardar" text="Guardar" onAction="#btnGuardarAction" />
-            <Button fx:id="btnCancelar" text="Cancelar" onAction="#btnCancelarAction" />
+            <Button fx:id="btnGuardar" onAction="#btnGuardarAction" styleClass="boton" stylesheets="@compracliente.css" text="Guardar" />
+            <Button fx:id="btnCancelar" onAction="#btnCancelarAction" styleClass="boton" stylesheets="@compracliente.css" text="Cancelar" />
         </HBox>
     </VBox>
 </AnchorPane>

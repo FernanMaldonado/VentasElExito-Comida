@@ -76,11 +76,13 @@ public class Compras {
         this.total.set(total);
     }
 
-    @Override
+  @Override
         public String toString() {
-            return "ID: " + idCompra + "\n" + // Add newline for better readability
-                   "USUARIO: " + idUsuario + "\n" +
-                   "FECHA COMPRAS: " + fechaCompra + "\n" +
-                   "TOTAL: " + total; // Removed the trailing '}'
+            return "ID: " + idCompra.get() + "\n" +
+                   "USUARIO: " + idUsuario.get() + "\n" +
+                   "FECHA COMPRA: " + fechaCompra.get() + "\n" +
+                   "TOTAL: Q" + total.get();
         }
+
+
 }

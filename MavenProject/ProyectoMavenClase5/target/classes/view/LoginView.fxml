@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -12,46 +12,49 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.LoginController">
-
-    <stylesheets>
-        <URL value="@/view/loginview.css" />
-    </stylesheets>
+<AnchorPane prefHeight="400.0" prefWidth="495.0" styleClass="AnchorPane" stylesheets="@loginview.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.LoginController">
 
     <children>
-        <VBox alignment="TOP_CENTER" spacing="15.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <VBox alignment="TOP_CENTER" layoutX="72.0" prefHeight="400.0" prefWidth="456.0" spacing="15.0" styleClass="mainFxmlClass" stylesheets="@loginview.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="72.0" AnchorPane.rightAnchor="72.0" AnchorPane.topAnchor="0.0">
             <padding>
-                <Insets top="20" left="20" right="20" bottom="20"/>
+                <Insets bottom="20" left="20" right="20" top="20" />
             </padding>
 
             <!-- HBox alineado a la derecha para el botón "Regresar" -->
-            <HBox alignment="TOP_RIGHT" prefWidth="Infinity">
-                <Button fx:id="btnRegresar" mnemonicParsing="false" onAction="#Regresar" text="Regresar" />
-            </HBox>
-
-            <!-- Logo -->
-            <ImageView fitHeight="80.0" fitWidth="412.0" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@../img/Logo2.png" />
-                </image>
-            </ImageView>
+            <HBox alignment="TOP_RIGHT" prefWidth="Infinity" />
+         <Group>
+            <children>
+               <ImageView fitHeight="60.0" fitWidth="200.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../img/Logo.png" />
+                  </image>
+               </ImageView>
+               <Label layoutX="71.0" layoutY="44.0" prefHeight="44.0" prefWidth="310.0" styleClass="TituloPedidos" text="Ventas El Exito Comida" textFill="#ff0052">
+                  <font>
+                     <Font size="28.0" />
+                  </font>
+               </Label>
+                   <Button fx:id="btnRegresar" layoutX="317.0" mnemonicParsing="false" onAction="#Regresar" styleClass="boton" text="Regresar" />
+            </children>
+         </Group>
 
             <!-- Título -->
             <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Iniciar Sesión" />
 
             <!-- Campo usuario -->
-            <TextField fx:id="txtUsuario" maxWidth="250" promptText="Usuario" />
+            <TextField fx:id="txtUsuario" maxWidth="250" promptText="Usuario" styleClass="Prueba" stylesheets="@loginview.css" />
 
             <!-- Campo contraseña con mostrar -->
             <HBox alignment="CENTER_LEFT" maxWidth="250" spacing="10">
-                <PasswordField fx:id="txtPassword" promptText="Contraseña" HBox.hgrow="ALWAYS" />
+                <PasswordField fx:id="txtPassword" promptText="Contraseña" styleClass="Prueba" stylesheets="@loginview.css" HBox.hgrow="ALWAYS" />
                 <TextField fx:id="txtPasswordVisible" managed="false" promptText="Contraseña" visible="false" HBox.hgrow="ALWAYS" />
                 <CheckBox fx:id="cbMostrarPassword" text="Mostrar" />
             </HBox>
 
             <!-- Botón ingresar -->
-            <Button maxWidth="250" onAction="#loginAction" text="Ingresar" />
+            <Button maxWidth="250" onAction="#loginAction" styleClass="boton" text="Ingresar" />
 
             <!-- Mensaje de error -->
             <Label fx:id="lblMensaje" style="-fx-text-fill: red;" />

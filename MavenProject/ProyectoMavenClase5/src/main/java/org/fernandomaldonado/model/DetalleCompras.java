@@ -90,14 +90,13 @@ public class DetalleCompras {
         this.precioUnitario.set(precioUnitario);
     }
 
-    @Override
-    public String toString() {
-        return "DetalleCompras{" +
-               "idDetalle=" + idDetalle.get() +
-               ", idCompra=" + idCompra.get() +
-               ", idProducto=" + idProducto.get() +
-               ", cantidad=" + cantidad.get() +
-               ", precioUnitario=" + precioUnitario.get() +
-               '}';
-    }
+   @Override
+        public String toString() {
+            return "ID Detalle: " + idDetalle.get() + "\n" +
+                   "ID Compra: " + idCompra.get() + "\n" +
+                   "ID Producto: " + idProducto.get() + "\n" +
+                   "Cantidad: " + cantidad.get() + "\n" +
+                   "Precio Unitario: Q" + precioUnitario.get();
+        }
+
 }
