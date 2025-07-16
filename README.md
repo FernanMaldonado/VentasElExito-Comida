@@ -4,6 +4,7 @@ Este proyecto es un sistema de gestión para un restaurante de comida rápida ll
 
 ## Contenido del Repositorio
 
+- Un proyecto en NetBeans usando JavaFx y con Maven
 - Una base de datos para manejar mejor la gestion de los registros, que incluye:
 - Creación de tablas 
 - Insertaciones de datos de prueba 
