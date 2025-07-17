@@ -141,44 +141,27 @@ delimiter ;
 -- ================================
 delimiter //
 
-create procedure sp_agregar_usuario(
-    in pUsername varchar(50),
-    in pNombreCompleto varchar(100),
-    in pCorreoElectronico varchar(100),
-    in pPassword varchar(255),
-    in pNumeroTelefono varchar(20),
-    in pFechaNacimiento date,
-    in pTipoDeCuenta enum('Administrador', 'Usuario')
+DELIMITER $$
+
+CREATE PROCEDURE sp_agregar_usuario(
+    IN p_username VARCHAR(50),
+    IN p_nombreCompleto VARCHAR(100),
+    IN p_correoElectronico VARCHAR(100),
+    IN p_password VARCHAR(100),
+    IN p_numeroTelefono VARCHAR(20),
+    IN p_fechaNacimiento DATE,
+    IN p_tipoDeCuenta VARCHAR(20)
 )
-begin
-    declare vExistente int default 0;
+BEGIN
+    IF EXISTS (SELECT 1 FROM usuarios WHERE username = p_username) THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'El nombre de usuario ya existe.';
+    ELSE
+        INSERT INTO usuarios (username, nombreCompleto, correoElectronico, password, numeroTelefono, fechaNacimiento, tipoDeCuenta)
+        VALUES (p_username, p_nombreCompleto, p_correoElectronico, p_password, p_numeroTelefono, p_fechaNacimiento, p_tipoDeCuenta);
+    END IF;
+END$$
 
-    select count(*) into vExistente
-    from usuarios
-    where username = pUsername or correoElectronico = pCorreoElectronico;
-
-    if vExistente > 0 then
-        signal sqlstate '45000' set message_text = 'error: el username o correo electrónico ya existe.';
-    else
-        insert into usuarios (
-            username,
-            nombreCompleto,
-            correoElectronico,
-            password,
-            numeroTelefono,
-            fechaNacimiento,
-            tipoDeCuenta
-        ) values (
-            pUsername,
-            pNombreCompleto,
-            pCorreoElectronico,
-            pPassword,
-            pNumeroTelefono,
-            pFechaNacimiento,
-            pTipoDeCuenta
-        );
-    end if;
-end //
 
 create procedure sp_listar_usuarios()
 begin
@@ -302,7 +285,6 @@ create procedure sp_agregar_detalle_compra (
 )
 begin
     declare vPrecioUnitario decimal(10,2);
-    declare vPrecioTotal decimal(10,2);
     declare vTotalCompra decimal(10,2);
     declare vTotalConImpuestos decimal(10,2);
     declare vStock int;
@@ -322,12 +304,12 @@ begin
         signal sqlstate '45000' set message_text = vMensaje;
     end if;
 
-    set vPrecioTotal = vPrecioUnitario * pCantidad;
-
+    -- ✅ Guardar solo el precio unitario en la tabla detalle_compras
     insert into detalle_compras (idCompra, idProducto, cantidad, precioUnitario)
-    values (pIdCompra, pIdProducto, pCantidad, vPrecioTotal);
+    values (pIdCompra, pIdProducto, pCantidad, vPrecioUnitario);
 
-    select ifnull(sum(precioUnitario), 0) into vTotalCompra
+    -- Recalcular total de la compra
+    select ifnull(sum(cantidad * precioUnitario), 0) into vTotalCompra
     from detalle_compras
     where idCompra = pIdCompra;
 
@@ -336,7 +318,8 @@ begin
     update compras
     set total = vTotalConImpuestos
     where idCompra = pIdCompra;
-end $$
+end;
+
 
 create procedure sp_listar_detalles()
 begin
@@ -414,6 +397,8 @@ call sp_agregarProductos('Pepsi', 'PepsiCo', 15.50, 15, '2024-06-30');
 -- Insertar usuario
 call sp_agregar_usuario('fer.m', 'Fernando M.', 'fer@mail.com', '1234', '12345678', '1990-01-01', 'Usuario');
 call sp_agregar_usuario('fer', 'Fernando M.', 'fernan@gmail.com', '1', '12345678', '1990-01-01', 'Administrador');
+call sp_agregar_usuario('Admin', 'Administrador', 'administrador@gmail.com', '1234', '12345678', '1990-01-01', 'Administrador');
+call sp_agregar_usuario('User', 'Usuario', 'usuario@gmail.com', '1234', '12345678', '1990-01-01', 'Usuario');
 
 -- Insertar compra con total inicial 0
 call sp_agregar_compra(1, '2025-07-14', 0.00);
@@ -428,3 +413,22 @@ call sp_listar_detalles();
 call sp_listarProductos();  
 -- call sp_agregar_detalle_compra(1, 1, 15); -- producto 1, cantidad 15 (valida stock)
 -- call sp_agregar_detalle_compra(1, 1, 2); -- producto 1, cantidad 15 (valida stock)
+
+SELECT
+    c.idCompra,
+    c.fechaCompra,
+    u.username,
+    u.correoElectronico,
+    p.nombreProducto,
+    d.cantidad,
+    d.precioUnitario,
+    (d.cantidad * d.precioUnitario) AS subtotal,
+    c.total
+FROM compras c
+JOIN usuarios u ON c.idUsuario = u.idUsuario
+JOIN detalle_compras d ON c.idCompra = d.idCompra
+JOIN productos p ON d.idProducto = p.idProducto
+WHERE c.idUsuario = 1
+ORDER BY c.fechaCompra DESC;
+
+
