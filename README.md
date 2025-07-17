@@ -14,6 +14,12 @@ Este proyecto es un sistema de gestión para un restaurante de comida rápida ll
 
 ### Script SQL completo de la base de datos:
 
+## Como adicional forma de navegar
+
+- Al estar en la Pantalla de Inicio debera registrace o ya se iniciar sesion con una de estas dos cuentas
+- Usuario : Admin / Password : 1234  - Este usuario lo enlazara con la vista contrlador de las entidades - Entorno Administrador
+- Usuario : User / Password : 1234 - Este usuario ingresara como un cliente nomal y tendra las opciones de realizar una compra y visualizar su historial de Compras - Entorno usuario
+
 <details>
 <summary><strong>Haz clic aquí para ver el script completo</strong></summary>
 
