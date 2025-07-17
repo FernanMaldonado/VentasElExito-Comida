@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class Conexion {
     private static Conexion instancia;
     private Connection conexion; 
-    private static final String URL = "jdbc:mysql://localhost:3306/VentaDeComida?user=root";
+    private static final String URL = "jdbc:mysql://localhost:3306/ventadecomida?useSSL=false&serverTimezone=UTC";
     private static final String USER = "quinto";
     private static final String PASSWORD = "admin";
     private static final String DRIVER = "com.mysql.jdbc.Driver";

@@ -32,12 +32,16 @@ public class CompraCliente implements Initializable {
     @FXML private Button btnGuardar;
     @FXML private Button btnCancelar;
     @FXML private Button btnRegresar;
+    private Registro usuarioLogueado;
+
+    public void setUsuarioLogueado(Registro usuarioLogueado) {
+        this.usuarioLogueado = usuarioLogueado;
+    }
 
     private ObservableList<RegistrosProductos> listaProductos;
     private Main principal;
 
     // Usuario logueado (debe ser seteado desde Main o clase que maneja sesión)
-    private Registro usuarioLogueado;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -53,10 +57,6 @@ public class CompraCliente implements Initializable {
         this.principal = principal;
     }
 
-    // Este método debe llamarse desde Main tras login
-    public void setUsuarioLogueado(Registro usuario) {
-        this.usuarioLogueado = usuario;
-    }
 
     private void cargarProductos() {
         listaProductos = FXCollections.observableArrayList();
@@ -221,10 +221,9 @@ public class CompraCliente implements Initializable {
     if (e.getSource() == btnRegresar && principal != null) {
         // Cerrar ventana actual
         Stage stageActual = (Stage) btnRegresar.getScene().getWindow();
-        stageActual.close();
 
         // Abrir ventana nueva (por ejemplo, Inicio)
-        principal.PantallaInicio();
+        principal.HistorialConUsuario(usuarioLogueado);
     }
 }
 

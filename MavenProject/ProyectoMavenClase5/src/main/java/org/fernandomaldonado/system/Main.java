@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import org.fernandomaldonado.controller.CompraCliente;
 import org.fernandomaldonado.controller.ComprasController;
 import org.fernandomaldonado.controller.DetalleComprasController;
+import org.fernandomaldonado.controller.HistorialDeComprasController;
 import org.fernandomaldonado.controller.LoginController;
 import org.fernandomaldonado.controller.PantallaInicioController;
 import org.fernandomaldonado.controller.RegistrarUsuarioController;
@@ -27,6 +28,14 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public Stage getEscenarioPrincipal() {
+        return escenarioPrincipal;
+    }
+
+    public void setEscenarioPrincipal(Stage escenarioPrincipal) {
+        this.escenarioPrincipal = escenarioPrincipal;
     }
 
     @Override
@@ -70,14 +79,15 @@ public class Main extends Application {
     }
 
     public void Inicio() {
-        InicioController ic = cambiarEntreEscenas("InicioView.fxml", 800, 600);
+        InicioController ic = cambiarEntreEscenas("InicioView.fxml", 1000, 600);
 
         if (ic != null) {
             ic.setPrincipal(this);
         } else {
             System.err.println("No se pudo cargar la vista de Inicio o su controlador es nulo.");
+            }
         }
-    }
+
 
     public void RegistrosProductos() {
         RegistrosProductosController rp = cambiarEntreEscenas("RegistrosProductosView.fxml", 1000, 800);
@@ -107,7 +117,7 @@ public class Main extends Application {
     }
     
     public void Registro() {
-        RegistrarceController rp = cambiarEntreEscenas("RegistrarceView.fxml", 1100, 750);
+        RegistrarceController rp = cambiarEntreEscenas("RegistrarceView.fxml", 1100, 800);
         if (rp != null) {
             rp.setPrincipal(this);
         } else {
@@ -117,7 +127,7 @@ public class Main extends Application {
     }
     
     public void CrearRegistro() {
-        RegistrarUsuarioController rp = cambiarEntreEscenas("RegistrarUsuarioView.fxml", 500, 500);
+        RegistrarUsuarioController rp = cambiarEntreEscenas("RegistrarUsuarioView.fxml", 500, 700);
         if (rp != null) {
             rp.setPrincipal(this);
         } else {
@@ -126,7 +136,7 @@ public class Main extends Application {
     }
     
     public void Compras() {
-        ComprasController rp = cambiarEntreEscenas("ComprasView.fxml", 1000, 600);
+        ComprasController rp = cambiarEntreEscenas("ComprasView.fxml", 1000, 750);
         if (rp != null) {
             rp.setPrincipal(this);
         } else {
@@ -152,23 +162,37 @@ public class Main extends Application {
         }
     }
     
-    public void mostrarCompraClienteConUsuario(Registro usuarioLogueado) {
+   public void HistorialConUsuario(Registro usuarioLogueado) {
     try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(URL_VIEW+"CompraCliente.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(URL_VIEW + "HistorialDeCompras.fxml"));
+        Parent root = loader.load();
+
+        HistorialDeComprasController controller = loader.getController();
+        controller.setPrincipal(this);
+        controller.setUsuarioLogueado(usuarioLogueado.getIdUsuario());
+
+        Scene scene = new Scene(root, 1200, 800);
+        escenarioPrincipal.setScene(scene);
+        escenarioPrincipal.setTitle("Historial de Compras");
+        escenarioPrincipal.centerOnScreen();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+public void mostrarCompraClienteConUsuario(Registro usuarioLogueado) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(URL_VIEW + "CompraCliente.fxml"));
         Parent root = loader.load();
 
         CompraCliente controller = loader.getController();
         controller.setPrincipal(this);
         controller.setUsuarioLogueado(usuarioLogueado);
 
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.setTitle("Registrar Compra");
-        stage.show();
-
-        // Opcional: cerrar la ventana actual de login si es necesario
-        // ...
+        Scene scene = new Scene(root, 600, 600);
+        escenarioPrincipal.setScene(scene);
+        escenarioPrincipal.setTitle("Registrar Compra");
+        escenarioPrincipal.centerOnScreen();
     } catch (IOException e) {
         e.printStackTrace();
     }

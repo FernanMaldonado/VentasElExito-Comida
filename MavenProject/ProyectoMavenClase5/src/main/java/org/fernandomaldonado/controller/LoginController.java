@@ -49,7 +49,7 @@ public class LoginController {
     }
 
     @FXML
-private void loginAction() {
+    private void loginAction() {
     String usuario = txtUsuario.getText().trim();
     String password = txtPassword.getText().trim();
 
@@ -94,6 +94,7 @@ private void loginAction() {
         e.printStackTrace();
         lblMensaje.setText("Error en la conexión");
     }
+    
 }
 
 

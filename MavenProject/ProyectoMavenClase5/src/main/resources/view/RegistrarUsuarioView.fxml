@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
@@ -13,41 +14,51 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="500" stylesheets="@registrarusuarioview.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.RegistrarUsuarioController">
+<AnchorPane prefHeight="500.0" prefWidth="500" styleClass="AnchorPane" stylesheets="@registrarusuarioview.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandomaldonado.controller.RegistrarUsuarioController">
     
-    <VBox alignment="CENTER" maxWidth="400" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+    <VBox alignment="CENTER" layoutX="47.0" layoutY="25.0" maxWidth="453.0" prefHeight="474.0" prefWidth="421.0" spacing="10" styleClass="Vbox" stylesheets="@registrarusuarioview.css" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="47.0" AnchorPane.rightAnchor="52.0" AnchorPane.topAnchor="25.0">
         <padding>
             <Insets bottom="20" left="20" right="20" top="20" />
         </padding>
-         <Button fx:id="btnRegresar" onAction="#btnRegresarAction" text="Regresar" />
-      <ImageView fitHeight="80.0" fitWidth="412.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../img/Logo2.png" />
-         </image>
-      </ImageView>
+         <Button fx:id="btnRegresar" onAction="#btnRegresarAction" styleClass="boton" text="Regresar" />
+      <Group>
+         <children>
+            <ImageView fitHeight="60.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/Logo.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="71.0" layoutY="8.0" prefHeight="44.0" prefWidth="310.0" styleClass="TituloPedidos" text="Ventas El Exito Comida" textFill="#ff0052">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Label>
+         </children>
+      </Group>
 
         <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Formulario de Registro" />
 
-        <TextField fx:id="txtUsername" maxWidth="250" promptText="Nombre de usuario" />
-        <TextField fx:id="txtNombreCompleto" maxWidth="250" promptText="Nombre completo" />
-        <TextField fx:id="txtCorreoElectronico" maxWidth="250" promptText="Correo electrónico" />
+        <TextField fx:id="txtUsername" maxWidth="250" promptText="Nombre de usuario" styleClass="Prueba" />
+        <TextField fx:id="txtNombreCompleto" maxWidth="250" promptText="Nombre completo" styleClass="Prueba" stylesheets="@registrarusuarioview.css" />
+        <TextField fx:id="txtCorreoElectronico" maxWidth="250" promptText="Correo electrónico" styleClass="Prueba" stylesheets="@registrarusuarioview.css" />
 
         <!-- Contenedor para contraseña con campo oculto, visible y checkbox -->
         <HBox alignment="CENTER_LEFT" maxWidth="250" spacing="10">
-            <PasswordField fx:id="txtContrasena" promptText="Contraseña" HBox.hgrow="ALWAYS" />
+            <PasswordField fx:id="txtContrasena" promptText="Contraseña" styleClass="Prueba" stylesheets="@registrarusuarioview.css" HBox.hgrow="ALWAYS" />
             <TextField fx:id="txtContrasenaVisible" managed="false" promptText="Contraseña" visible="false" HBox.hgrow="ALWAYS" />
             <CheckBox fx:id="cbMostrarContrasena" text="Mostrar" />
         </HBox>
 
-        <TextField fx:id="txtNumeroTelefono" maxWidth="250" promptText="Número de teléfono" />
-        <DatePicker fx:id="txtFechaNacimiento" maxWidth="250" promptText="Fecha de nacimiento" />
+        <TextField fx:id="txtNumeroTelefono" maxWidth="250" promptText="Número de teléfono" styleClass="Prueba" stylesheets="@registrarusuarioview.css" />
+        <DatePicker fx:id="txtFechaNacimiento" maxWidth="250" promptText="Fecha de nacimiento" styleClass="Prueba" />
 
         <!-- Nuevo ComboBox para Tipo de Cuenta -->
-        <ComboBox fx:id="cbmTipoDeCuenta" maxWidth="250" promptText="Tipo de cuenta" />
+        <ComboBox fx:id="cbmTipoDeCuenta" disable="true" editable="true" maxWidth="250" promptText="Tipo de cuenta" />
 
         <HBox alignment="CENTER" spacing="20">
-            <Button fx:id="btnRegistrar" onAction="#btnRegistrarAction" text="Registrar" />
+            <Button fx:id="btnRegistrar" onAction="#btnRegistrarAction" styleClass="boton" text="Registrar" />
         </HBox>
 
         <!--

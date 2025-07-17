@@ -52,3 +52,9 @@
 .boton:hover {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0.7, 0, 3);
 } 
+
+.TituloPedidos {
+    -fx-font-family: "Circular", "Arial", sans-serif;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F42536;
+}
