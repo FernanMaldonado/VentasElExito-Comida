@@ -324,7 +324,7 @@ begin
         signal sqlstate '45000' set message_text = vMensaje;
     end if;
 
-    -- ✅ Guardar solo el precio unitario en la tabla detalle_compras
+    --  Guardar solo el precio unitario en la tabla detalle_compras
     insert into detalle_compras (idCompra, idProducto, cantidad, precioUnitario)
     values (pIdCompra, pIdProducto, pCantidad, vPrecioUnitario);
 
