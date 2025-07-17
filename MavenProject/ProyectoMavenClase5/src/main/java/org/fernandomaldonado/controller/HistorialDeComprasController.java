@@ -18,7 +18,7 @@ import javafx.scene.control.Button;
 import org.fernandomaldonado.conexion.Conexion;
 
 public class HistorialDeComprasController {
-    @FXML private Button btnRegresar;
+    @FXML private Button btnRegresar,btnVolver;
     @FXML
     private TableView<HistorialDeCompras> tableCompras;
 
@@ -118,6 +118,8 @@ public class HistorialDeComprasController {
         if (a.getSource() == btnRegresar) {
             principal.PantallaInicio();
             
+        }else if  (a.getSource() == btnVolver) {
+            principal.ClienteCompra();
         }
     }
 }

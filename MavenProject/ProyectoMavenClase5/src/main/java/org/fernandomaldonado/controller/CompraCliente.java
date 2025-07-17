@@ -31,7 +31,7 @@ public class CompraCliente implements Initializable {
 
     @FXML private Button btnGuardar;
     @FXML private Button btnCancelar;
-    @FXML private Button btnRegresar;
+    @FXML private Button btnRegresar,btnCerrar;
     private Registro usuarioLogueado;
 
     public void setUsuarioLogueado(Registro usuarioLogueado) {
@@ -224,6 +224,9 @@ public class CompraCliente implements Initializable {
 
         // Abrir ventana nueva (por ejemplo, Inicio)
         principal.HistorialConUsuario(usuarioLogueado);
+    }else if(e.getSource() == btnCerrar){
+        principal.PantallaInicio();
+        
     }
 }
 

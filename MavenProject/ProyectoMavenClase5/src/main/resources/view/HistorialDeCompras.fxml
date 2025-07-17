@@ -28,10 +28,11 @@
             <Font size="16" />
         </font>
     </Label>
-   <Button fx:id="btnRegresar" layoutX="668.0" layoutY="533.0" mnemonicParsing="false" onAction="#Regresar" prefHeight="32.0" prefWidth="139.0" styleClass="boton" text="Regresar al Inicio" />
+   <Button fx:id="btnRegresar" layoutX="601.0" layoutY="533.0" mnemonicParsing="false" onAction="#Regresar" prefHeight="36.0" prefWidth="206.0" styleClass="boton" text="Regresar al Inicio" />
    <Label contentDisplay="CENTER" layoutX="191.0" layoutY="29.0" styleClass="TituloPedidos" stylesheets="@loginview.css" text="Historial de Compras del Usuario">
       <font>
          <Font size="40.0" />
       </font>
    </Label>
+   <Button fx:id="btnVolver" layoutX="45.0" layoutY="540.0" mnemonicParsing="false" onAction="#Regresar" prefHeight="36.0" prefWidth="206.0" styleClass="boton" text="Volver a Comprar" />
 </AnchorPane>
